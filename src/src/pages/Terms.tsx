@@ -1,3 +1,6 @@
+// src/pages/Terms.tsx
+import React from "react";
+
 export default function Terms() {
   const today = new Date().toLocaleDateString();
   return (
