@@ -1,0 +1,21 @@
+/* floating small logo for each benefit */
+.benefit-card { position: relative; overflow: visible; }
+.benefit-float {
+  position: absolute;
+  right: 14px;
+  top: -18px;
+  width:46px;
+  height:46px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,var(--blue),#21E3FF);
+  box-shadow:0 10px 24px rgba(10,15,31,0.12);
+  color:#fff;
+  font-weight:800;
+  transform: translateY(0);
+  animation: float 3.2s ease-in-out infinite;
+  z-index:3;
+}
+@keyframes float { 0% { transform: translateY(0) } 50% { transform: translateY(-8px) } 100% { transform: translateY(0) } }
