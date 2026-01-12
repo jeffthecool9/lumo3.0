@@ -28,11 +28,15 @@ const faqs: FAQItem[] = [
     answer:
       "Yes — there is a recurring monthly fee for ongoing system maintenance and support.",
   },
-  {
-    question: "Is it refundable?",
-    answer:
-      "Setup fees are non-refundable. You can cancel the monthly recurring fee anytime. Your flows remain usable, but changes/support stop after cancellation.",
-  },
+ {
+  question: "Are there any recurring monthly software fees?",
+  answer: "Yes, there is a recurring monthly fee for system maintenance & management fee for fixing heavy issues."
+},
+{
+  question: "Is it refundable?",
+  answer: "No. You can cancel the subscription recurring fee only. You are still able to access with the flow for a lifetime, but without any assistance in changing the setups."
+}
+
 ];
 
 export function FAQ() {
