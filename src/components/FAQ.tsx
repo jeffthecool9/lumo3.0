@@ -21,7 +21,11 @@ const faqs: FAQItem[] = [
   },
   {
     question: "Are there any recurring monthly software fees?",
-    answer: "No. We focus on one-time setup packages. You pay once for the custom build, and that's it. We believe business owners have enough subscriptions already."
+    answer: "Yes, there is a recurring monthly fee for system maintenance & management fee for fixing heavy issues."
+  }
+   {
+    question: "Is it refundable?",
+    answer: "No. You can cancel the subscription recurring fee only. You are still able to access with the flow for a lifetime, but without any assistance in changing the setups."
   }
 ];
 
