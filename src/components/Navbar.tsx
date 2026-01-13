@@ -40,7 +40,7 @@ export const Navbar: React.FC = () => {
       Lumo
     </span>
     <span className="text-[11px] font-semibold tracking-wide text-slate-700/80">
-      Human First. test-999
+      Human First. Built to Support You
     </span>
   </div>
 </a>
