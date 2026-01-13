@@ -23,15 +23,14 @@ export default function App() {
         <section className="pt-32 pb-12 lg:pt-48 lg:pb-24 px-6 max-w-6xl mx-auto flex flex-col items-center text-center">
           <div className="glass-glossy p-10 md:p-16 rounded-[3rem] max-w-5xl animate-float shadow-2xl mb-16 relative border border-white/60">
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-[900] tracking-tighter text-[#0f172a] mb-8 leading-[1.05]">
-              Stop Losing Sales to <br />
+              A Business That Replies for You <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                Slow Replies
+             So You Can Focus on What Matters
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed font-semibold mb-10 opacity-90">
-              Every missed reply is a lost customer. We build your custom chat flow to respond instantly, qualify enquiries,
-              and pass sales-ready buyers to you — even when you're offline.
+            Lumo builds a reliable auto-reply system that responds instantly, guides conversations, and qualifies enquiries automatically — so your business keeps moving, even when you’re not online.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
