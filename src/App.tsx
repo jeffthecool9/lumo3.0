@@ -23,7 +23,7 @@ export default function App() {
         <section className="pt-32 pb-12 lg:pt-48 lg:pb-24 px-6 max-w-6xl mx-auto flex flex-col items-center text-center">
           <div className="glass-glossy p-10 md:p-16 rounded-[3rem] max-w-5xl animate-float shadow-2xl mb-16 relative border border-white/60">
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-[900] tracking-tighter text-[#0f172a] mb-8 leading-[1.05]">
-              A Business That Replies for You <br />
+              A Business Replies for You <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
              So You Can Focus on What Matters
               </span>
