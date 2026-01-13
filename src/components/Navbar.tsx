@@ -21,14 +21,30 @@ export const Navbar: React.FC = () => {
     <nav className="fixed top-6 left-0 right-0 z-[100] flex justify-center px-4">
       <div className="glass-heavy px-6 py-3 md:px-8 md:py-4 flex items-center justify-between w-full max-w-5xl rounded-[1.5rem]">
         <a href="/" className="flex items-center gap-3 group no-underline">
-          <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md overflow-hidden">
-            <svg viewBox="0 0 100 100" className="w-5 h-5 relative z-10">
-               <path d="M50 20 A 30 30 0 0 1 50 80 A 30 30 0 0 1 50 20" fill="none" stroke="#F0EEE9" strokeWidth="10" strokeLinecap="round" />
-               <circle cx="50" cy="50" r="14" fill="#F0EEE9" />
-            </svg>
-          </div>
-          <span className="text-xl font-extrabold text-slate-900 tracking-tight">Lumo</span>
-        </a>
+  <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md overflow-hidden">
+    <svg viewBox="0 0 100 100" className="w-5 h-5 relative z-10">
+      <path
+        d="M50 20 A 30 30 0 0 1 50 80 A 30 30 0 0 1 50 20"
+        fill="none"
+        stroke="#F0EEE9"
+        strokeWidth="10"
+        strokeLinecap="round"
+      />
+      <circle cx="50" cy="50" r="14" fill="#F0EEE9" />
+    </svg>
+  </div>
+
+  {/* Brand text */}
+  <div className="flex flex-col leading-none">
+    <span className="text-xl font-extrabold text-slate-900 tracking-tight">
+      Lumo
+    </span>
+    <span className="text-[11px] font-semibold tracking-wide text-slate-700/80">
+      Human First. System Smart.
+    </span>
+  </div>
+</a>
+
 
         <div className="hidden md:flex items-center gap-8">
           <a href="/#features" onClick={(e) => handleNavClick(e, '#features')} className="text-sm font-black text-slate-700 hover:text-blue-600 transition-colors">Features</a>
