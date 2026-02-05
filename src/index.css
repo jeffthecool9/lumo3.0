@@ -46,71 +46,71 @@ body {
 }
 
 /* =========================
-   Lumo Bubble / Cloud Glass
-   Soft • Inflated • Organic
+   Lumo White Bubble Glass
+   Visible • Puffy • Soft
 ========================= */
 
 .lumo-glass {
   position: relative;
 
-  /* soft translucent body (looks like bubble) */
-  color: rgba(255, 255, 255, 0.30);
+  /* solid white glass body */
+  color: #ffffff;
 
-  /* kill sharp typography edges */
-  -webkit-text-stroke: 0px;
+  /* remove harsh edges */
+  -webkit-text-stroke: 0;
 
-  /* fluffy diffusion + depth */
+  /* volume + softness */
   text-shadow:
-    0 0 2px rgba(255, 255, 255, 0.95),
-    0 3px 10px rgba(255, 255, 255, 0.50),
-    0 10px 26px rgba(0, 0, 0, 0.10);
+    0 0 2px rgba(255,255,255,0.95),
+    0 4px 10px rgba(255,255,255,0.55),
+    0 10px 22px rgba(0,0,0,0.18);
 
-  /* “inflation” feel */
+  /* inflate */
   filter:
-    blur(0.28px)
-    drop-shadow(0 10px 22px rgba(0, 120, 255, 0.16))
-    drop-shadow(0 2px 6px rgba(255, 255, 255, 0.35));
+    blur(0.35px)
+    drop-shadow(0 12px 26px rgba(0,0,0,0.20));
 }
 
-/* inner light bloom (spherical highlight) */
+/* inner milky glow */
 .lumo-glass::before {
   content: "";
   position: absolute;
-  inset: -35% -45%;
+  inset: -25% -35%;
   background: radial-gradient(
     ellipse at top left,
-    rgba(255, 255, 255, 0.78),
-    rgba(255, 255, 255, 0.28) 35%,
-    rgba(255, 255, 255, 0.00) 65%
+    rgba(255,255,255,0.95),
+    rgba(255,255,255,0.55) 35%,
+    rgba(255,255,255,0.15) 55%,
+    rgba(255,255,255,0.0) 70%
   );
   mix-blend-mode: screen;
   pointer-events: none;
   opacity: 0.85;
 }
 
-/* glossy reflection sweep (subtle, premium) */
+/* glass reflection sweep */
 .lumo-glass::after {
   content: "";
   position: absolute;
-  inset: -45% -60%;
+  inset: -40% -60%;
   background: linear-gradient(
     120deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.55) 45%,
+    rgba(255,255,255,0.65) 45%,
     transparent 70%
   );
-  transform: translateX(-55%) rotate(-12deg);
+  transform: translateX(-60%) rotate(-10deg);
   mix-blend-mode: screen;
   pointer-events: none;
-  animation: bubble-shine 4.6s ease-in-out infinite;
+  animation: lumo-bubble-shine 4.2s ease-in-out infinite;
   opacity: 0.55;
 }
 
-@keyframes bubble-shine {
-  0%   { transform: translateX(-65%) rotate(-12deg); opacity: 0; }
-  28%  { opacity: 0.55; }
-  55%  { transform: translateX(45%) rotate(-12deg); opacity: 0.55; }
-  100% { transform: translateX(78%) rotate(-12deg); opacity: 0; }
+@keyframes lumo-bubble-shine {
+  0%   { transform: translateX(-65%) rotate(-10deg); opacity: 0; }
+  30%  { opacity: 0.55; }
+  55%  { transform: translateX(45%) rotate(-10deg); opacity: 0.55; }
+  100% { transform: translateX(78%) rotate(-10deg); opacity: 0; }
 }
 
 /* =========================
@@ -127,3 +127,4 @@ body {
   color: rgba(15, 23, 42, 0.72);
   text-shadow: 0 1px 0 rgba(255,255,255,0.80);
 }
+
