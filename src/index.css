@@ -46,73 +46,66 @@ body {
 }
 
 /* =========================
-   Lumo Liquid Glass Branding
-   Apple / Bubble / Prism
+   Lumo Transparent Glass Text
+   (NO rainbow — clear/icy)
 ========================= */
 
-.lumo-liquid {
+.lumo-glass {
   position: relative;
 
-  /* liquid prism fill */
-  background-image:
-    radial-gradient(
-      140% 120% at 20% 10%,
-      rgba(255,255,255,0.95) 0%,
-      rgba(255,255,255,0.35) 25%,
-      rgba(255,255,255,0.0) 50%
-    ),
-    conic-gradient(
-      from 210deg,
-      rgba(255, 90, 180, 0.95),
-      rgba(120, 100, 255, 0.95),
-      rgba(70, 210, 255, 0.95),
-      rgba(80, 255, 210, 0.95),
-      rgba(255, 240, 130, 0.95),
-      rgba(255, 150, 90, 0.95),
-      rgba(255, 90, 180, 0.95)
-    );
+  /* main "glass" fill */
+  color: rgba(255, 255, 255, 0.18);
 
-  background-size: 160% 160%;
-  background-position: center;
+  /* outlines keep it readable on glass navbar */
+  -webkit-text-stroke: 1px rgba(15, 23, 42, 0.55);
 
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  /* contrast & definition */
-  -webkit-text-stroke: 1px rgba(15, 23, 42, 0.35);
+  /* depth */
   text-shadow:
-    0 1px 0 rgba(255,255,255,0.4),
-    0 6px 18px rgba(0, 140, 255, 0.28),
-    0 2px 10px rgba(0,0,0,0.18);
+    0 1px 0 rgba(255, 255, 255, 0.70),
+    0 10px 26px rgba(0, 0, 0, 0.12);
 
-  filter: drop-shadow(0 10px 24px rgba(0, 130, 255, 0.22));
+  filter: drop-shadow(0 10px 20px rgba(0, 120, 255, 0.12));
 }
 
-/* moving glossy reflection */
-.lumo-liquid::after {
+/* glossy reflection sweep */
+.lumo-glass::after {
   content: "";
   position: absolute;
-  inset: -25% -40%;
+  inset: -30% -45%;
   background: linear-gradient(
     120deg,
     transparent 0%,
     rgba(255,255,255,0.0) 35%,
-    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0.78) 50%,
     rgba(255,255,255,0.0) 65%,
     transparent 100%
   );
-  transform: translateX(-45%) rotate(-8deg);
+  transform: translateX(-55%) rotate(-10deg);
   mix-blend-mode: screen;
   pointer-events: none;
-  animation: lumo-shine 3.5s ease-in-out infinite;
+  animation: lumo-glass-shine 3.6s ease-in-out infinite;
   opacity: 0.95;
 }
 
-@keyframes lumo-shine {
-  0%   { transform: translateX(-50%) rotate(-8deg); opacity: 0; }
+@keyframes lumo-glass-shine {
+  0%   { transform: translateX(-60%) rotate(-10deg); opacity: 0; }
   18%  { opacity: 0.9; }
-  50%  { transform: translateX(45%) rotate(-8deg); opacity: 0.9; }
+  50%  { transform: translateX(45%) rotate(-10deg); opacity: 0.9; }
   85%  { opacity: 0.25; }
-  100% { transform: translateX(70%) rotate(-8deg); opacity: 0; }
+  100% { transform: translateX(75%) rotate(-10deg); opacity: 0; }
+}
+
+/* =========================
+   Premium Tagline (bigger + taste)
+========================= */
+
+.lumo-tagline {
+  font-family: ui-serif, "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  /* premium, quiet confidence */
+  color: rgba(30, 41, 59, 0.72);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.75);
 }
