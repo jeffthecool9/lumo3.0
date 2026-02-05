@@ -36,7 +36,7 @@ export const Navbar: React.FC = () => {
 
   {/* Brand text */}
   <div className="flex flex-col leading-none">
-  <span className="lumo-glass text-xl md:text-2xl font-extrabold tracking-tight relative">
+<span className="lumo-glass text-xl md:text-2xl font-extrabold tracking-tight">
   Lumo
 </span>
 
