@@ -46,70 +46,24 @@ body {
 }
 
 /* =========================
-   Lumo Blue Bubble Glass
-   Puffy • Visible • Brand-safe
+   Lumo Clean Blue Text
+   Solid • Soft • Premium
 ========================= */
 
 .lumo-glass {
   position: relative;
 
-  /* solid Lumo blue glass body */
-  color: #3b82f6; /* Tailwind blue-500 (safe & clean) */
+  /* brand blue (clean & readable) */
+  color: #3b82f6; /* Tailwind blue-500 */
 
+  /* remove all effects */
   -webkit-text-stroke: 0;
+  filter: none;
 
-  /* inflated volume */
+  /* subtle softness (NOT glow) */
   text-shadow:
-    0 0 2px rgba(147,197,253,0.95),   /* inner blue glow */
-    0 4px 10px rgba(147,197,253,0.55),
-    0 10px 22px rgba(15,23,42,0.22);  /* depth */
-
-  /* bubble inflation */
-  filter:
-    blur(0.35px)
-    drop-shadow(0 12px 26px rgba(37,99,235,0.35));
-}
-
-/* inner milky-blue glow */
-.lumo-glass::before {
-  content: "";
-  position: absolute;
-  inset: -25% -35%;
-  background: radial-gradient(
-    ellipse at top left,
-    rgba(219,234,254,0.95),   /* blue-100 */
-    rgba(147,197,253,0.65),   /* blue-300 */
-    rgba(59,130,246,0.25),    /* blue-500 */
-    rgba(59,130,246,0.0) 70%
-  );
-  mix-blend-mode: screen;
-  pointer-events: none;
-  opacity: 0.85;
-}
-
-/* glossy glass reflection sweep */
-.lumo-glass::after {
-  content: "";
-  position: absolute;
-  inset: -40% -60%;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(219,234,254,0.75),
-    transparent 70%
-  );
-  transform: translateX(-60%) rotate(-10deg);
-  mix-blend-mode: screen;
-  pointer-events: none;
-  animation: lumo-blue-bubble-shine 4.2s ease-in-out infinite;
-  opacity: 0.55;
-}
-
-@keyframes lumo-blue-bubble-shine {
-  0%   { transform: translateX(-65%) rotate(-10deg); opacity: 0; }
-  30%  { opacity: 0.55; }
-  55%  { transform: translateX(45%) rotate(-10deg); opacity: 0.55; }
-  100% { transform: translateX(78%) rotate(-10deg); opacity: 0; }
+    0 1px 0 rgba(255,255,255,0.55),
+    0 2px 6px rgba(15,23,42,0.12);
 }
 
 
@@ -127,5 +81,6 @@ body {
   color: rgba(15, 23, 42, 0.72);
   text-shadow: 0 1px 0 rgba(255,255,255,0.80);
 }
+
 
 
