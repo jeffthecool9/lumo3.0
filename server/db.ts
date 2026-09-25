@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { config, readiness } from './config';
-import { AppError } from './policy';
+import { config, readiness } from './config.js';
+import { AppError } from './policy.js';
 export const db = readiness.database ? createClient(config.SUPABASE_URL, config.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false, autoRefreshToken: false } }) : null;
 export function database() { if (!db) throw new AppError(503, 'Account services are not connected yet. Explore the sample workspace meanwhile.'); return db; }
 export async function rpc(name: string, args: Record<string, unknown>) {

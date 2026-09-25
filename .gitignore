@@ -36,3 +36,5 @@ test-results
 playwright-report
 *.zip
 *.backup.*
+.git-publish-index*
+.build-server/

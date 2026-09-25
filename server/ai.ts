@@ -1,9 +1,9 @@
 import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
-import { config, readiness } from './config';
-import { rpc, checked, database } from './db';
-import { AppError, estimateMicros } from './policy';
-import { planSchema } from '../shared/schema';
+import { config, readiness } from './config.js';
+import { rpc, checked, database } from './db.js';
+import { AppError, estimateMicros } from './policy.js';
+import { planSchema } from '../shared/schema.js';
 
 export async function runAI(workspace: string, kind: 'plan'|'reply', context: unknown) {
   if (!readiness.ai) throw new AppError(503,'AI is not connected or is paused. No generation has been charged.');

@@ -2,14 +2,14 @@ import express, { type Request, type Response, type NextFunction } from 'express
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
 import { z } from 'zod';
-import { config, readiness } from './config';
-import { database, checked, rpc } from './db';
-import { verifyAccount } from './firebase';
-import { AppError, accessAllowed } from './policy';
-import { checkout, syncBilling, paymentGateway, handleBillingEvent } from './billing';
-import { runAI } from './ai';
-import { operations } from './operations';
-import { emptyKnowledge, knowledgeSchema, planSchema } from '../shared/schema';
+import { config, readiness } from './config.js';
+import { database, checked, rpc } from './db.js';
+import { verifyAccount } from './firebase.js';
+import { AppError, accessAllowed } from './policy.js';
+import { checkout, syncBilling, paymentGateway, handleBillingEvent } from './billing.js';
+import { runAI } from './ai.js';
+import { operations } from './operations.js';
+import { emptyKnowledge, knowledgeSchema, planSchema } from '../shared/schema.js';
 
 export const app = express();
 app.disable('x-powered-by');

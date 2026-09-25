@@ -1,8 +1,8 @@
 import {Router} from 'express';
 import {z} from 'zod';
-import {database,checked} from './db';
-import {AppError} from './policy';
-import {appointmentInput,appointmentPatch,defaultSettings,leadInput,leadPatch,settingsInput} from '../shared/operations';
+import {database,checked} from './db.js';
+import {AppError} from './policy.js';
+import {appointmentInput,appointmentPatch,defaultSettings,leadInput,leadPatch,settingsInput} from '../shared/operations.js';
 
 export const operations=Router();
 const leadFields='id,name,email,phone,interest,notes,stage,created_at,updated_at';

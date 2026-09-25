@@ -1,7 +1,7 @@
 import { initializeApp, applicationDefault, cert, getApps } from 'firebase-admin/app';
 import { getAuth, type DecodedIdToken } from 'firebase-admin/auth';
-import {config,readiness} from './config';
-import {AppError} from './policy';
+import {config,readiness} from './config.js';
+import {AppError} from './policy.js';
 export function firebaseAdmin(){
   if(!readiness.authServer)throw new AppError(503,'Server sign-in verification is not connected yet. Your subscription has not started.');
   const app=getApps().find(a=>a.name==='lumo-server')??initializeApp({projectId:config.FIREBASE_PROJECT_ID,credential:

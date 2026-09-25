@@ -1,9 +1,9 @@
 import Stripe from 'stripe';
 import { createHmac } from 'node:crypto';
-import { config, readiness } from './config';
-import { database, rpc, checked } from './db';
-import { AppError, billingProjection } from './policy';
-import { firebaseAdmin } from './firebase';
+import { config, readiness } from './config.js';
+import { database, rpc, checked } from './db.js';
+import { AppError, billingProjection } from './policy.js';
+import { firebaseAdmin } from './firebase.js';
 
 export const stripe = config.STRIPE_SECRET_KEY ? new Stripe(config.STRIPE_SECRET_KEY, { maxNetworkRetries: 2, timeout: 20000 }) : null;
 export function paymentGateway() {
