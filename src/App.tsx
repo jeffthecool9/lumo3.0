@@ -1,74 +1,26 @@
-import React from "react";
-
-import { Navbar } from "./components/Navbar";
-import { PhoneDemo } from "./components/PhoneDemo";
-import { Features } from "./components/Features";
-import { HowItWorks } from "./components/HowItWorks";
-import { Pricing } from "./components/Pricing";
-import { FAQ } from "./components/FAQ";
-import { Footer } from "./components/Footer";
-import { FloatingWidget } from "./components/FloatingWidget";
-import { Testimonials } from "./components/Testimonials";
-import { Integrations } from "./components/Integrations";
-
-export default function App() {
-  return (
-    <div className="min-h-screen text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden relative">
-      <FloatingWidget />
-
-      <Navbar />
-
-      <main className="relative z-10">
-        {/* HERO */}
-        <section className="pt-32 pb-12 lg:pt-48 lg:pb-24 px-6 max-w-6xl mx-auto flex flex-col items-center text-center">
-          <div className="glass-glossy p-10 md:p-16 rounded-[3rem] max-w-5xl animate-float shadow-2xl mb-16 relative border border-white/60">
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-[900] tracking-tighter text-[#0f172a] mb-8 leading-[1.05]">
-              A Business Replies for You <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-             So You Can Focus on What Matters
-              </span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed font-semibold mb-10 opacity-90">
-            Lumo builds a reliable auto-reply system that responds instantly, guides conversations, and qualifies enquiries automatically — so your business keeps moving, even when you’re not online.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
-              <a
-                href="https://wa.me/60123456789"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 group px-10 py-4.5 text-base bg-blue-600 text-white rounded-full shadow-lg shadow-blue-500/20 hover:bg-blue-700 hover:scale-[1.02] transition-all font-bold min-w-[220px]"
-              >
-                Chat on WhatsApp →
-              </a>
-
-              <div className="flex items-center gap-2 text-slate-600 px-6 py-4 rounded-full border border-slate-200/60 bg-white/40 backdrop-blur-sm">
-                <span className="text-[10px] font-black uppercase tracking-[0.15em] whitespace-nowrap">
-                  Tailored for your business
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative w-full flex justify-center z-10">
-            <PhoneDemo />
-          </div>
-        </section>
-
-        {/* SECTIONS */}
-        <div id="channels">
-          <Integrations />
-        </div>
-
-        <Testimonials />
-        <Features />
-        <HowItWorks />
-        <Pricing />
-        <FAQ />
-      </main>
-
-      <Footer />
-    </div>
-  );
+import React,{useEffect,useState} from 'react';
+import {onIdTokenChanged,type User} from 'firebase/auth';
+import {api,auth,connectAuth,type PublicConfig} from './api';
+import {Logo} from './Landing';
+import {LumoLanding as PremiumLanding} from './LumoLanding';
+import {Gate} from './Gate';
+import {Workspace} from './Workspace';
+import './styles.css';
+import './premium.css';
+import './operations.css';
+export default function App(){
+  const [,setAuthRevision]=useState(0);
+  const [config,setConfig]=useState<PublicConfig|null>(null);const [user,setUser]=useState<User|null>(null);const [ready,setReady]=useState(false);const [gate,setGate]=useState<'login'|'trial'|null>(null);
+  const [theme,setTheme]=useState<'dark'|'light'>(()=>{try{return localStorage.getItem('lumo-appearance-v2')==='dark'?'dark':'light';}catch{return 'light';}});
+  useEffect(()=>{document.documentElement.dataset.theme=theme;try{localStorage.setItem('lumo-appearance-v2',theme);}catch{}},[theme]);
+  useEffect(()=>{let alive=true;let cleanup=()=>{};api<PublicConfig>('/config').then(c=>{if(!alive)return;setConfig(c);const client=connectAuth(c);if(client)cleanup=onIdTokenChanged(client,u=>{setUser(u);setAuthRevision(n=>n+1);setReady(true);});else setReady(true);}).catch(()=>{if(alive)setReady(true);});return()=>{alive=false;cleanup();};},[]);
+  const path=window.location.pathname;
+  function start(){if(path==='/'&&user&&(user.emailVerified||user.phoneNumber)){location.assign('/workspace');return;}setGate('trial');}
+  function login(){if(user&&(user.emailVerified||user.phoneNumber)){location.assign('/workspace');return;}setGate('login');}
+  function signedIn(){setAuthRevision(n=>n+1);setUser(auth?.currentUser??null);if(gate==='login')location.assign('/workspace');}
+  if(path==='/terms'||path==='/privacy')return <Legal privacy={path==='/privacy'}/>;
+  return <>{path==='/sample'?<Workspace sample config={config} onStart={start}/>:path==='/workspace'?ready?<Workspace key={user?.uid??'guest'} sample={false} config={config} onStart={start}/>:<div className="empty-state">Opening Lumo...</div>:<PremiumLanding signedIn={!!user&&(user.emailVerified||!!user.phoneNumber)} onStart={start} onLogin={login} theme={theme} onTheme={()=>setTheme(t=>t==='dark'?'light':'dark')}/>} {gate&&<Gate config={config} user={user} intent={gate} onClose={()=>setGate(null)} onSignedIn={signedIn}/>}</>;
+}
+function Legal({privacy}:{privacy:boolean}){
+  return <div className="legal-page"><header><Logo/><a href="/">Back to Lumo</a></header><main><span className="overline">LUMO</span><h1>{privacy?'Privacy notice':'Service terms'}</h1><p className="muted">Development preview. These policies must be completed with the operator's legal identity and support contact before public launch.</p>{privacy?<><h2>Information used by the service</h2><p>Lumo processes your account email, business information, conversation plans, private test messages, and usage records to provide the service. Your business workspace is separated from other businesses.</p><h2>Service providers</h2><p>Firebase Authentication provides Google, email/password, and phone sign-in. Supabase stores workspace data. Stripe processes payments; full card details are not stored by Lumo. Business knowledge and test messages needed for a response are sent to the configured Google Gemini API. Transactional emails are delivered through the configured email provider. Phone numbers used for SMS sign-in are processed by Google for spam and abuse prevention. Firebase reCAPTCHA protects phone verification.</p><h2>Trial eligibility</h2><p>Hashed verified-email, phone-number, and payment-fingerprint references may be retained to enforce one trial per business. They are not payment credentials. Shared-card matches can require manual eligibility review.</p><h2>Retention and requests</h2><p>Saved work stays accessible after cancellation. Do not enter sensitive customer data in test conversations. Before launch, the operator must publish a retention schedule, support contact, and procedures for export and deletion requests.</p></>:<><h2>The service</h2><p>Lumo Starter provides one private assistant, business knowledge, editable conversation plans, and private testing. This release does not publish websites, embed bots, contact customers, confirm appointments, or automate external messaging.</p><h2>Subscription and trial</h2><p>Lumo Starter costs RM99 per month. Eligible businesses may start one seven-day free trial with a credit or debit card supporting recurring payments. The trial automatically converts to RM99/month unless renewal is cancelled before it ends. The exact first payment date is displayed by Stripe at checkout.</p><h2>Usage limits</h2><p>The trial includes up to 3 plan generations or revisions, 50 test replies, and a US$0.50 AI budget in total. Each paid billing month includes up to 30 generations, 500 replies, and a US$5 AI budget. The first reached limit applies. Long prompts may reach the AI budget before the message allowance. Provider attempts with uncertain outcomes can count toward usage. No automatic overage charges apply.</p><h2>Cancellation</h2><p>Cancel renewal in Usage & Billing or the Stripe customer portal. Access continues until the end of the trial or paid period. Saved plans remain available afterwards; new AI generation and replies require active access. Cancellation does not itself issue a refund.</p><h2>Accuracy and acceptable use</h2><p>Review business facts and approve a plan before testing. AI may make mistakes. Do not use the service for unlawful activity or attempt to bypass usage limits. Suspected repeated trial use may be held for review with renewal stopped.</p></>}<p className="fine">This preview does not accept live payments until the operator completes the service configuration and launch checks.</p></main></div>;
 }
