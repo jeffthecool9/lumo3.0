@@ -10,6 +10,10 @@ Keep main unchanged until the preview is approved. Do not put production secrets
 
 The API is exported from api/index.ts without opening a port. Check /api/health, /api/config and a protected /api/workspace request after deployment. [Vercel Node functions](https://vercel.com/docs/functions/runtimes/node-js).
 
+The Firebase Admin dependency requires Node's require(ESM) support. Set NODE_OPTIONS=--experimental-require-module in the approved Vercel environment and redeploy. Vercel disables this feature by default; see [Advanced Node configuration](https://vercel.com/docs/functions/runtimes/node-js/advanced-node-configuration#experimental-nodejs-require-of-es-module). Native ESM relative imports must keep their .js suffixes. Run npm run build:server followed by npm run test:runtime to test the emitted backend without tsx.
+
+The health endpoint reports databaseStatus as not_configured, ready, or unavailable. When configured it checks only the platform control row with a three-second timeout and returns 503 if that check fails. This confirms database reachability, not completion of Firebase, Stripe, AI or customer-isolation launch tests.
+
 Set APP_URL to the exact deployment origin for configured environments, with no trailing slash. For unconfigured previews it falls back to VERCEL_URL. A custom domain needs its own APP_URL. Do not infer trusted origins from user-supplied request headers.
 
 ## Supabase

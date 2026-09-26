@@ -37,7 +37,19 @@ app.get('/api/config',(_req,res)=>res.json({
   stripePublishableKey:config.STRIPE_PUBLISHABLE_KEY, testMode:!config.STRIPE_SECRET_KEY.startsWith('sk_live_'),
 
 }));
-app.get('/api/health',(_req,res)=>res.json({ok:true,services:readiness}));
+app.get('/api/health',async(_req,res)=>{
+  let databaseStatus:'not_configured'|'ready'|'unavailable'='not_configured';
+  if(readiness.database){
+    try{
+      // Probe a control row, never customer records or provider credentials.
+      const result=await database().from('platform_controls').select('id').eq('id',1)
+        .abortSignal(AbortSignal.timeout(3000)).maybeSingle();
+      databaseStatus=!result.error&&result.data?.id===1?'ready':'unavailable';
+    }catch{databaseStatus='unavailable';}
+  }
+  const ok=databaseStatus!=='unavailable';
+  res.status(ok?200:503).json({ok,services:readiness,databaseStatus});
+});
 app.use('/api',async(req,res,next)=>{
   try {
     const token=req.headers.authorization?.match(/^Bearer (.+)$/)?.[1];
