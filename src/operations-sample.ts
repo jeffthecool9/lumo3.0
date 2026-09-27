@@ -14,6 +14,6 @@ export function sampleOperations():OperationsState{
 }
 export function sampleMessages(thread:string):InboxMessage[]{
   const first=thread.endsWith('1');
-  return [{id:`${thread}-1`,thread_id:thread,direction:'inbound',body:first?'Hi, can I book a colour consultation this Saturday?':'Hello, how much is the scalp treatment?',delivery:'received',created_at:new Date().toISOString()},
-    {id:`${thread}-2`,thread_id:thread,direction:'outbound',body:first?'Happy to help. Our team needs to confirm availability. What time would you prefer?':'Our team will confirm the right treatment and price for you. Would you like someone to follow up?',delivery:'sent',created_at:new Date().toISOString()}];
+  return [{id:`${thread}-1`,thread_id:thread,direction:'inbound',body:first?'Hi, nak book consultation this Saturday, boleh?':'Hi, 请问 scalp treatment 多少钱？',delivery:'received',created_at:new Date().toISOString()},
+    {id:`${thread}-2`,thread_id:thread,direction:'outbound',body:first?'Boleh. Pukul berapa yang sesuai? Our team will check availability first.':'这个需要团队确认项目和价格。Would you like a follow-up? This is a sample only.',delivery:'sent',created_at:new Date().toISOString()}];
 }

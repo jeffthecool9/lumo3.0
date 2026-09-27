@@ -1,0 +1,252 @@
+/* Shared reading scale for the workspace and current landing page. */
+.workspace-shell{--ops-text:#16181c;--ops-muted:#535962;--ops-bg:#f8f9fb;color:var(--ops-text);background:var(--ops-bg);font-size:16px;font-weight:500}
+[data-theme=dark] .workspace-shell{--ops-text:#f4f5f7;--ops-muted:#b8bec8;--ops-bg:#111518}
+.workspace-shell h1,.workspace-shell h2,.workspace-shell h3{font-weight:750;color:var(--ops-text);overflow-wrap:anywhere}
+.workspace-shell .ws-navigation{width:268px;padding:22px 18px}
+.ws-navigation .ws-business{padding:13px 10px}
+.ws-navigation .ws-business>span{width:36px;height:36px;font-size:16px;font-weight:700}
+.ws-navigation .ws-business strong{font-size:15px;font-weight:750;color:var(--ops-text)}
+.ws-navigation .ws-business small{font-size:12px;line-height:1.6}
+.ws-navigation .ws-nav-group{font-size:11px;font-weight:750;color:var(--ops-muted);padding:20px 12px 9px}
+.ws-navigation nav button{height:46px;padding:11px 12px;font-size:16px;font-weight:650;color:var(--ops-text);line-height:1.4;gap:12px}
+.ws-navigation nav button.active{font-weight:750;color:#174fc4;background:#eaf1ff}
+.ws-navigation .ws-nav-bottom>a,.ws-navigation .ws-nav-bottom>button{font-size:14px;font-weight:650;color:var(--ops-text)}
+.ws-navigation .ws-sample-label{font-size:12px;font-weight:500;line-height:1.5}
+.workspace-shell .ws-navigation.collapsed{width:78px;padding-inline:14px}
+.workspace-shell .workspace-header{font-size:14px;color:var(--ops-muted);gap:12px}
+.workspace-shell .workspace-header strong{font-size:15px;font-weight:700;color:var(--ops-text)}
+.workspace-shell .user-avatar{width:34px;height:34px;font-size:14px;font-weight:700}
+.workspace-shell .private-label{font-size:12px}
+.workspace-shell .sample-banner{font-size:13px;color:#294d85;flex-wrap:wrap;gap:8px 14px}
+.workspace-shell .sample-banner button{font-size:13px;font-weight:700;min-height:28px}
+.workspace-shell .page-heading h1{font-size:32px;line-height:1.2;font-weight:750}
+.workspace-shell .page-heading p{font-size:16px;color:var(--ops-muted);line-height:1.65}
+.workspace-shell .page-heading .overline{font-size:12px;font-weight:700;color:var(--ops-muted)}
+.workspace-shell .button,.workspace-shell .button.small{font-size:14px;font-weight:700;min-height:42px;line-height:1.5}
+.workspace-shell .text-button{font-size:14px;font-weight:650;line-height:1.5}
+.workspace-shell .badge,.workspace-shell .ops-pill{font-size:12px;font-weight:650;white-space:normal}
+.workspace-shell .workspace-footer{font-size:12px;color:var(--ops-muted)}
+.workspace-shell .alert{font-size:14px}
+.workspace-shell .ops-muted,.workspace-shell .ops-caption{font-size:14px;color:var(--ops-muted)}
+.operations h2{font-size:20px;font-weight:750}
+.ops-empty p{font-size:15px}
+.ops-stats strong{font-size:36px;font-weight:750;color:var(--ops-text)}
+.workspace-shell .ops-stats>button>span{font-size:14px;line-height:1.6;color:var(--ops-text);align-items:flex-start}
+.ops-section-heading>span,.ops-section-heading>button{font-size:13px;font-weight:600}
+.ops-checklist-row strong,.ops-attention strong{font-size:16px;font-weight:650}
+.ops-checklist-row p,.ops-attention p{font-size:14px;line-height:1.65}
+.ops-checklist-row>span{font-size:13px}
+.ops-search input{height:44px;font-size:16px}
+.ops-filter{font-size:14px;flex-wrap:wrap}
+.operations select,.ops-modal-form select{font-size:14px;min-height:42px}
+.ops-table{font-size:14px;min-width:750px;line-height:1.6}
+.ops-table th{font-size:13px;font-weight:700;color:var(--ops-text)}
+.ops-table td>strong,.ops-contact strong{font-size:15px;font-weight:650}
+.ops-table small{font-size:13px}
+.ops-avatar{font-size:14px;font-weight:700}
+.ops-inbox{grid-template-columns:290px minmax(0,1fr);min-height:640px}
+.ops-thread-list strong,.ops-thread-head strong{font-size:16px;font-weight:700}
+.ops-thread-list p{font-size:14px;line-height:1.65}
+.ops-thread-list small,.ops-thread-list>button>span,.ops-thread-head small{font-size:12px}
+.ops-message>span{font-size:12px;color:var(--ops-muted)}
+.ops-message>p{font-size:16px;line-height:1.75;color:var(--ops-text)}
+.ops-message>small{font-size:11px}
+.ops-reply-options button{font-size:13px;font-weight:650}
+.ops-reply textarea{font-size:16px;line-height:1.6;min-height:88px}
+.ops-reply>div:last-child>span{font-size:12px}
+.workspace-shell .ops-connection p,.workspace-shell .ops-connection ol{font-size:15px}
+.ops-settings form>label,.ops-modal-form label{font-size:15px;font-weight:650;color:var(--ops-text,var(--text-primary))}
+.ops-modal-form input,.ops-modal-form textarea{font-size:16px}
+.ops-readiness{font-size:15px}
+.workspace-shell .version-select select{font-size:13px;max-width:185px;color:var(--ops-text)}
+.workspace-shell .plan-prompt>div:first-child,.workspace-shell .plan-prompt>div:first-child strong{font-size:15px;font-weight:650;color:var(--ops-text)}
+.workspace-shell .plan-prompt textarea{font-size:16px;line-height:1.8;color:var(--ops-text);min-height:115px}
+.workspace-shell textarea::placeholder,.workspace-shell input::placeholder{color:var(--ops-muted);opacity:1}
+.workspace-shell .plan-prompt-footer>span{font-size:13px;line-height:1.6;color:var(--ops-muted)}
+.workspace-shell .plan-title h2{font-size:22px;line-height:1.5}
+.workspace-shell .plan-title .badge{font-size:12px}
+.workspace-shell .plan-step h3{font-size:19px;line-height:1.5}
+.workspace-shell .plan-step p,.workspace-shell .plan-step li{font-size:16px;line-height:1.8;color:var(--ops-text)}
+.workspace-shell .plan-step-heading .overline{font-size:11px;color:var(--ops-muted)}
+.workspace-shell .step-rail>span{font-size:12px;font-weight:700}
+.workspace-shell .plan-summary h3,.workspace-shell .test-aside h3{font-size:18px}
+.workspace-shell .plan-summary dt{font-size:12px;color:var(--ops-muted);font-weight:650}
+.workspace-shell .plan-summary dd{font-size:15px;color:var(--ops-text)}
+.workspace-shell .lead-tags span{font-size:12px}
+.workspace-shell .approval-box strong{font-size:16px;color:var(--ops-text)}
+.workspace-shell .approval-box p,.workspace-shell .test-aside>p{font-size:14px;color:var(--ops-muted)}
+.workspace-shell .knowledge-form label,.workspace-shell .plan-editor label{font-size:15px;font-weight:650;color:var(--ops-text)}
+.workspace-shell .knowledge-form input,.workspace-shell .knowledge-form select,.workspace-shell .knowledge-form textarea,.workspace-shell .plan-editor input,.workspace-shell .plan-editor textarea{font-size:16px;color:var(--ops-text);font-weight:450}
+.workspace-shell .field-meta{font-size:12px;line-height:1.6;gap:16px;color:var(--ops-muted)}
+.workspace-shell .context-note h3{font-size:18px;color:var(--ops-text)}
+.workspace-shell .context-note p{font-size:14px;color:var(--ops-muted)}
+.workspace-shell .chat-panel{height:650px}
+.workspace-shell .chat-panel-head strong{font-size:15px;font-weight:700;line-height:1.5}
+.workspace-shell .chat-panel-head small{font-size:12px;color:var(--ops-muted)}
+.workspace-shell .chat-date{font-size:11px;color:var(--ops-muted)}
+.workspace-shell .chat-message{font-size:16px;line-height:1.8}
+.workspace-shell .chat-message.model>div{color:var(--ops-text)}
+.workspace-shell .chat-form input{font-size:16px;color:var(--ops-text)}
+.workspace-shell .test-aside>button{font-size:14px;color:var(--ops-text)}
+.workspace-shell .secure-line,.workspace-shell .fine{font-size:12px;color:var(--ops-muted)}
+.workspace-shell .billing-overview p,.workspace-shell .billing-price small{font-size:14px;color:var(--ops-muted)}
+.workspace-shell .billing-detail h3{font-size:20px}
+.workspace-shell .billing-detail>p{font-size:15px;color:var(--ops-muted)}
+.workspace-shell .usage-meter>div{font-size:14px;color:var(--ops-text)}
+.workspace-shell .usage-meter>small,.workspace-shell .billing-actions a{font-size:12px;color:var(--ops-muted)}
+.workspace-shell .usage-meter strong small{font-size:14px;color:var(--ops-muted)}
+.workspace-shell .empty-state h2{font-size:22px;color:var(--ops-text)}
+.workspace-shell .empty-state p{font-size:15px;color:var(--ops-muted)}
+.local-conversation-settings{margin:0;padding:22px 0;border:0;border-block:1px solid var(--ops-line);min-width:0}
+.local-conversation-settings legend{font-size:18px;font-weight:750;padding:0 10px 0 0;color:var(--ops-text)}
+.local-preference-grid{display:grid;grid-template-columns:1fr;gap:20px}
+.local-preference-note{font-size:14px;color:var(--ops-muted);margin:18px 0 0}
+.local-flow-context{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:0 0 14px;font-size:14px;color:var(--ops-text)}
+.local-flow-context>span,.local-flow-context>button{display:flex;align-items:center;gap:8px}
+.appointment-briefs{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;border-block:1px solid var(--ops-line);padding:16px 0;margin:8px 0 18px}
+.appointment-briefs label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:650;max-width:100%}
+.appointment-briefs select{background:var(--ops-surface);color:var(--ops-text);border:1px solid var(--ops-line);border-radius:5px;font-size:14px;padding:10px;max-width:100%}
+.appointment-briefs button{display:flex;align-items:center;gap:7px;text-align:left}
+[data-theme=dark] .workspace-shell .sample-banner{color:#c4d5f8}
+[data-theme=dark] .workspace-shell .ws-navigation nav button.active{background:#24324e;color:#b7ccff}
+
+.lumo-site{--lp-ink:#111315;--lp-muted:#50565b;font-weight:450}
+[data-theme=dark] .lumo-site{--lp-ink:#f4f5f7;--lp-muted:#bac2c8}
+.lumo-site h1,.lumo-site h2{font-weight:700}
+.lumo-site h3{font-weight:650}
+.lumo-site .lp-hero h1{font-weight:750}
+.lumo-site .lp-hero h1>span{color:var(--lp-ink)}
+.lumo-site .lp-hero-description{font-size:18px;color:var(--lp-muted)}
+.lumo-site .lp-hero-eyebrow{font-size:12px;font-weight:700;line-height:1.6}
+.lumo-site .lp-nav-inner>nav,.lumo-site .lp-login{font-size:15px;font-weight:650;color:var(--lp-ink)}
+.lumo-site .lp-button{font-size:15px;font-weight:700;min-height:46px}
+.lumo-site .lp-nav-actions .lp-button{font-size:14px}
+.lumo-site .lp-prompt{max-width:730px}
+.lumo-site .lp-prompt textarea{font-size:17px;height:80px}
+.lumo-site .lp-prompt-actions>span{font-size:13px;max-width:none;font-weight:550}
+.lumo-site .lp-prompt-examples,.lumo-site .lp-prompt-examples>button{font-size:13px;font-weight:600}
+.lumo-site .lp-hero-proof{font-size:12px;line-height:1.6;flex-wrap:wrap}
+.lumo-site .lp-section-label,.lumo-site .lp-eyebrow{font-size:12px;font-weight:650;line-height:1.7}
+.lumo-site .lp-story-step>p,.lumo-site .lp-statement-bottom>p,.lumo-site .lp-principles-grid p,.lumo-site .lp-section-heading>p,.lumo-site .lp-business-description>p,.lumo-site .lp-price-intro>p{font-size:16px;line-height:1.85}
+.lumo-site .lp-text-link{font-size:15px;font-weight:650}
+.lumo-site .lp-step-number,.lumo-site .lp-step-number>span{font-size:14px;font-weight:600}
+.lumo-site .lp-business-description h3{font-weight:700;min-height:0}
+.lumo-site .lp-business-description .lp-eyebrow,.lumo-site .lp-business-photo-label{font-size:12px}
+.lumo-site .lp-principles-grid h3{font-size:22px;font-weight:700}
+.lumo-site .lp-workspace-preview{height:560px}
+.lumo-site .lp-story-visual{height:590px;top:max(90px,calc(50vh - 280px))}
+.lumo-site .lp-preview-body{overflow-y:auto}
+.lumo-site .lp-preview-body>h3{font-size:19px;font-weight:650}
+.lumo-site .lp-knowledge-rows strong,.lumo-site .lp-plan-nodes strong{font-size:14px;font-weight:650}
+.lumo-site .lp-knowledge-rows p,.lumo-site .lp-plan-nodes p,.lumo-site .lp-chat-user,.lumo-site .lp-chat-bot>p{font-size:13px}
+.lumo-site .lp-preview-tabs>span{font-size:13px}
+.lumo-site .lp-preview-heading,.lumo-site .lp-small-status,.lumo-site .lp-preview-bottom,.lumo-site .lp-story-caption{font-size:11px}
+.lumo-site .lp-demo-copy>p{font-size:17px;color:#d5ddd1}
+.lumo-site .lp-demo-copy>.lp-demo-note{font-size:12px;color:#c5d1c0}
+.lumo-site .lp-demo-businesses>button{font-size:16px;font-weight:650}
+.lumo-site .lp-demo-head strong{font-size:16px;font-weight:700;color:#16181c}
+.lumo-site .lp-demo-head>div>span{font-size:12px;color:#535b50}
+.lumo-site .lp-demo-messages{height:350px}
+.lumo-site .lp-demo-message{font-size:16px;color:#202720}
+.lumo-site .lp-demo-message.bot>p{color:#242b24}
+.lumo-site .lp-demo-suggestions>button{font-size:12px;line-height:1.6;color:#303a2b}
+.lumo-site .lp-demo-date{font-size:11px;color:#606958}
+.lumo-site .lp-demo-disclosure{font-size:12px;color:#606958;line-height:1.6}
+.lumo-site .lp-demo-form input{font-size:16px}
+.lumo-site .lp-price-top,.lumo-site .lp-launch-note{font-size:13px}
+.lumo-site .lp-price-offer>p,.lumo-site .lp-price-offer li{font-size:16px}
+.lumo-site .lp-price-footnote{font-size:13px;line-height:1.8}
+.lumo-site .lp-faq-item h3>button{font-size:16px;font-weight:650;line-height:1.6}
+.lumo-site .lp-faq-item p{font-size:15px}
+.lumo-site .lp-faq-number,.lumo-site .lp-footer-bottom,.lumo-site .lp-footer-bottom button{font-size:12px}
+.lumo-site .lp-footer-top>nav{font-size:14px}
+.lumo-site .lp-footer-top>p,.lumo-site .lp-closing .lp-container>a{font-size:14px}
+.lumo-site .lp-product-fan{height:420px}
+.lumo-site .lp-fan-card{height:390px}
+.lumo-site .lp-mini-label,.lumo-site .lp-fan-footer,.lumo-site .lp-fan-chat-head small,.lumo-site .lp-fan-chat-input,.lumo-site .lp-showcase-caption{font-size:11px}
+.lumo-site .lp-fan-content>div,.lumo-site .lp-fan-flow>div,.lumo-site .lp-fan-chat p,.lumo-site .lp-fan-chat-head strong{font-size:12px;color:#353e35}
+.lumo-site .lp-fan-center-top>span{font-size:14px;color:#4d5846}
+.lumo-site .lp-fan-content h3{font-weight:650}
+
+@media(max-width:1200px){
+  .workspace-shell .plan-layout{grid-template-columns:minmax(0,1fr) 210px}
+  .workspace-shell .knowledge-layout,.workspace-shell .test-layout{grid-template-columns:1fr}
+  .workspace-shell .context-note{display:none}
+  .workspace-shell .test-aside{display:block}
+  .ops-inbox{grid-template-columns:240px minmax(0,1fr)}
+  .ops-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ops-stats>button:nth-child(3){border-left:0;border-top:1px solid var(--ops-line)}
+  .ops-stats>button:nth-child(4){border-top:1px solid var(--ops-line)}
+  .lumo-site .lp-nav-inner>nav{margin-left:0;gap:20px}
+}
+@media(max-width:1000px){
+  .workspace-shell .plan-layout,.ops-settings,.ops-overview-grid{grid-template-columns:1fr}
+  .workspace-shell .plan-summary{display:block;border-top:1px solid var(--ops-line);padding-top:24px}
+  .workspace-shell .heading-actions{flex-wrap:wrap}
+}
+@media(max-width:800px){
+  .workspace-shell .ws-navigation,.workspace-shell .ws-navigation.collapsed{width:280px;max-width:calc(100vw - 35px);padding:22px 18px}
+  .ws-navigation.collapsed .ws-nav-group{font-size:11px;padding:20px 12px 9px}
+  .workspace-shell .page-heading h1{font-size:30px}
+  .workspace-shell .sample-banner button{white-space:normal;text-align:left}
+  .workspace-shell .page-heading{align-items:flex-start;flex-wrap:wrap}
+  .lumo-site .lp-hero-description{font-size:17px}
+  .lumo-site .lp-playground-grid{grid-template-columns:1fr;gap:32px}
+  .lumo-site .lp-demo-businesses{max-width:none}
+  .lumo-site .lp-price-grid{grid-template-columns:1fr}
+  .lumo-site .lp-price-offer{border-left:0;border-top:1px solid var(--lp-line);padding:28px 0 0}
+}
+@media(max-width:540px){
+  .workspace-shell .workspace-header{padding-inline:16px;font-size:13px}
+  .workspace-shell .workspace-header strong{font-size:14px}
+  .workspace-shell .workspace-content{padding-inline:18px}
+  .workspace-shell .private-label{display:none}
+  .workspace-shell .plan-title{flex-wrap:wrap}
+  .workspace-shell .plan-title .heading-actions{max-width:none}
+  .workspace-shell .plan-prompt-footer{flex-wrap:wrap}
+  .workspace-shell .plan-prompt-footer>span{max-width:none;flex-basis:100%}
+  .workspace-shell .chat-panel-head{padding:14px 10px;gap:8px;flex-wrap:wrap}
+  .workspace-shell .chat-panel{height:630px}
+  .workspace-shell .chat-message{font-size:16px}
+  .workspace-shell .test-aside{display:block}
+  .workspace-shell .workspace-footer{flex-wrap:wrap}
+  .ops-inbox{display:block;min-height:0;height:690px}
+  .ops-reply-options{gap:8px;flex-wrap:wrap}
+  .ops-reply-options button{padding-inline:8px}
+  .ops-settings select{font-size:16px}
+  .lumo-site .lp-hero h1{font-size:43px}
+  .lumo-site .lp-hero-description{font-size:16px;max-width:100%}
+  .lumo-site .lp-hero-description br{display:none}
+  .lumo-site .lp-hero-eyebrow{font-size:10px}
+  .lumo-site .lp-prompt textarea{font-size:16px;height:90px}
+  .lumo-site .lp-prompt-actions{flex-wrap:wrap}
+  .lumo-site .lp-prompt-actions>span{font-size:12px}
+  .lumo-site .lp-prompt-actions .lp-button{width:100%;justify-content:space-between}
+  .lumo-site .lp-prompt-examples>button{font-size:12px;padding:7px}
+  .lumo-site .lp-login{font-size:14px}
+  .lumo-site .lp-hero-proof{font-size:11px;gap:9px 15px}
+  .lumo-site .lp-demo-businesses>button{font-size:13px;line-height:1.6}
+  .lumo-site .lp-demo-message{font-size:15px}
+  .lumo-site .lp-demo-message>p{max-width:88%}
+  .lumo-site .lp-demo-disclosure{padding-inline:12px}
+  .lumo-site .lp-preview-body{padding-inline:14px}
+  .lumo-site .lp-workspace-preview{height:590px}
+  .lumo-site .lp-footer-top{flex-wrap:wrap}
+  .lumo-site .lp-footer-top>nav{gap:18px}
+  .lumo-site .lp-footer-bottom{flex-wrap:wrap;gap:16px}
+  .lumo-site .lp-product-fan{height:350px}
+  .lumo-site .lp-fan-card{height:320px}
+  .lumo-site .lp-fan-center-top>span{font-size:12px}
+  .lumo-site .lp-fan-content>div,.lumo-site .lp-fan-flow>div,.lumo-site .lp-fan-chat p,.lumo-site .lp-fan-chat-head strong{font-size:11px}
+  .lumo-site .lp-fan-chat-head{height:52px}
+  .lumo-site .lp-fan-chat{gap:6px}
+  .lumo-site .lp-showcase-caption{font-size:9px;gap:8px}
+}
+@media(max-width:360px){.lumo-site .lp-hero h1{font-size:36px}.workspace-shell .page-heading h1{font-size:28px}}
+@media(max-width:540px) and (max-height:760px){
+  .lumo-site .lp-hero{padding-top:18px}
+  .lumo-site .lp-hero-eyebrow{margin-bottom:12px}
+  .lumo-site .lp-hero h1{margin-bottom:16px}
+  .lumo-site .lp-hero-description{line-height:1.65!important;margin-bottom:20px!important}
+  .lumo-site .lp-showcase{padding-top:24px}
+}

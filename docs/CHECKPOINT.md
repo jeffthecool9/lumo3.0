@@ -1,6 +1,6 @@
 # Lumo Development Checkpoint
 
-Updated 2026-09-26. This is a development preview, not a production launch.
+Updated 2026-09-27. This is a development preview, not a production launch.
 
 ## Source And Hosting
 
@@ -26,6 +26,18 @@ Landing composer and preset demo; sample workspace with sidebar, overview, leads
 The backend contains Firebase verification, workspace authorization, scoped business APIs, subscription gates, Stripe test-mode integration, and atomic AI budget reservations. A missing provider never reports simulated live success.
 
 ## Next Integration Gates
+
+### Malaysian Appointment Update
+
+- Larger, heavier typography and near-black sidebar labels; the existing blue logo, accents and dark mode remain.
+- Landing copy and brief starters now focus on appointment enquiries across industries, including consultations, on-site visits and classes.
+- Business Knowledge stores English, Bahasa Melayu, Chinese or auto-matched Malaysian mix, plus conversational/professional tone. Existing knowledge records remain compatible.
+- Server planning/testing instructions honour language switches, use supplied RM prices and Malaysian local dates, and collect appointment requests without claiming confirmed bookings.
+- Clearly labelled preset chats cover English, BM, Chinese and mixed messages. They are not live AI. The sample workspace can add a Malaysian plan version without removing old plans or the saved prompt.
+- Focused localization tests cover preferences, prompt safeguards and preset routing. Live multilingual quality still requires a connected provider and benchmark conversations.
+- No database migration, live provider activation or billing changes in this update.
+
+### Remaining Connections
 
 1. Configure Firebase public web values and a protected server identity, then authorize the preview domain and verify two separate accounts. Do not paste private keys into chat or GitHub.
 2. Verify real account onboarding, data persistence and cross-business isolation against the hosted database.

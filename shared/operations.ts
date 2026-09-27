@@ -23,7 +23,7 @@ export interface InboxThread{id:string;lead_id:string;channel:'whatsapp'|'web';s
 export interface InboxMessage{id:string;thread_id:string;direction:'inbound'|'outbound'|'internal';body:string;created_at:string;delivery:'received'|'sent'|'failed'|'internal'}
 export interface ChannelConnection{id:string;channel:'whatsapp'|'web';status:'disconnected'|'pending'|'connected'|'error';display_name:string;updated_at:string}
 export interface OperationsState{leads:Lead[];appointments:Appointment[];threads:InboxThread[];connections:ChannelConnection[];settings:WorkspaceSettings}
-export const defaultSettings:WorkspaceSettings={industry:'beauty',timezone:'Asia/Kuala_Lumpur'};
+export const defaultSettings:WorkspaceSettings={industry:'other',timezone:'Asia/Kuala_Lumpur'};
 export function appointmentConflict(items:Appointment[],candidate:Pick<Appointment,'id'|'resource'|'starts_at'|'ends_at'|'status'>){
   return candidate.status==='confirmed'&&items.some(a=>a.id!==candidate.id&&a.status==='confirmed'&&a.resource.toLowerCase()===candidate.resource.toLowerCase()&&Date.parse(a.starts_at)<Date.parse(candidate.ends_at)&&Date.parse(a.ends_at)>Date.parse(candidate.starts_at));
 }
