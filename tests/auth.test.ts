@@ -1,6 +1,22 @@
 import {describe,it,expect} from 'vitest';
 import {normalizePhone,authError} from '../src/auth-utils';
 import {hasVerifiedIdentity} from '../server/firebase';
+import {availableAuthMethods} from '../shared/auth-methods';
+
+describe('sign-up availability',()=>{
+  const configured={auth:true,authServer:true,database:true,authMethods:{google:true,email:true,phone:false}};
+  it('offers only explicitly enabled providers',()=>{
+    expect(availableAuthMethods(configured)).toEqual({google:true,email:true,phone:false});
+    expect(availableAuthMethods({...configured,authMethods:undefined})).toEqual({google:false,email:false,phone:false});
+    expect(availableAuthMethods(null)).toEqual({google:false,email:false,phone:false});
+  });
+  it.each(['auth','authServer','database'] as const)('blocks account creation without %s',missing=>{
+    expect(availableAuthMethods({...configured,[missing]:false})).toEqual({google:false,email:false,phone:false});
+  });
+  it('requires an explicit phone opt-in',()=>{
+    expect(availableAuthMethods({...configured,authMethods:{google:true,email:true,phone:true}}).phone).toBe(true);
+  });
+});
 describe('verified Firebase account requirements',()=>{
   it('requires email verification for password accounts',()=>{
     expect(hasVerifiedIdentity({email:'owner@example.com',email_verified:false})).toBe(false);

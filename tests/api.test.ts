@@ -7,6 +7,9 @@ describe('unconfigured API fails closed',()=>{
     expect(result.status).toBe(200);
     expect(result.body).not.toHaveProperty('STRIPE_SECRET_KEY');
     expect(result.body).not.toHaveProperty('SUPABASE_SERVICE_ROLE_KEY');
+    expect(result.body).not.toHaveProperty('FIREBASE_PRIVATE_KEY');
+    expect(result.body).not.toHaveProperty('FIREBASE_CLIENT_EMAIL');
+    expect(result.body.authMethods).toEqual({google:false,email:false,phone:false});
   });
   it.each(['/plans/generate','/chat','/billing/checkout','/plans','/billing/cancel','/operations/leads','/operations/appointments','/operations/threads/10000000-0000-4000-8000-000000000001/notes','/operations/threads/10000000-0000-4000-8000-000000000001/replies'])('rejects anonymous access to %s',async url=>{
     const r=await request(app).post(`/api${url}`).send({mode:'trial',paid:true,trial:true});expect(r.status).toBe(401);

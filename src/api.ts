@@ -1,6 +1,8 @@
 import {initializeApp,getApps} from 'firebase/app';
 import {getAuth,type Auth} from 'firebase/auth';
+import {type AuthMethods} from '../shared/auth-methods';
 export interface PublicConfig {
+  authMethods?: AuthMethods;
   auth:boolean;authServer:boolean;database:boolean;billing:boolean;ai:boolean;
   firebase:{apiKey:string;authDomain:string;projectId:string;appId:string};
   stripePublishableKey:string;testMode:boolean;

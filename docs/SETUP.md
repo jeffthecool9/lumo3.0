@@ -32,7 +32,9 @@ Only connection metadata belongs in channel_connections. A later Meta integratio
 
 Set FIREBASE_API_KEY, FIREBASE_AUTH_DOMAIN, FIREBASE_PROJECT_ID and FIREBASE_APP_ID from the Firebase web app configuration. These values identify the public web app.
 
-The API additionally requires a protected server identity: FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY, or GOOGLE_APPLICATION_CREDENTIALS pointing to a protected file outside the repository for local development. Enter private credentials yourself in the hosting environment, not chat or GitHub. Prefer managed identity where supported and verified.
+The API additionally requires a protected server identity: FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY, or GOOGLE_APPLICATION_CREDENTIALS pointing to a protected file outside the repository for local development. Store the private key as a Vercel Secret scoped to the intended preview branch, never in chat, GitHub or a browser bundle. A PEM value with literal `\n` separators is accepted. Prefer managed identity where supported and verified.
+
+Set AUTH_GOOGLE_ENABLED and AUTH_EMAIL_ENABLED to true only after enabling the corresponding Firebase providers. Leave AUTH_PHONE_ENABLED false until SMS billing and abuse controls are in place. The API and sign-up UI both require complete public and server Firebase settings plus database configuration before offering a provider. Redeploy after changing Vercel variables, then check `/api/config` and a verified account's workspace reload.
 
 Enable only the sign-in providers being tested, authorize the actual preview/custom domains and configure email verification. For SMS, set allowed regions, budgets and abuse controls before enabling billed traffic. Use Firebase test phone numbers for development; do not send test SMS to arbitrary real numbers.
 

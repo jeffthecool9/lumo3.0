@@ -10,6 +10,7 @@ import { checkout, syncBilling, paymentGateway, handleBillingEvent } from './bil
 import { runAI } from './ai.js';
 import { operations } from './operations.js';
 import { emptyKnowledge, knowledgeSchema, planSchema } from '../shared/schema.js';
+import { availableAuthMethods } from '../shared/auth-methods.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -33,6 +34,7 @@ app.use('/api',(req,res,next)=>{
   next();
 });
 app.get('/api/config',(_req,res)=>res.json({
+  authMethods: availableAuthMethods({...readiness, authMethods:{google:config.AUTH_GOOGLE_ENABLED==='true',email:config.AUTH_EMAIL_ENABLED==='true',phone:config.AUTH_PHONE_ENABLED==='true'}}),
   ...readiness, firebase:{apiKey:config.FIREBASE_API_KEY,authDomain:config.FIREBASE_AUTH_DOMAIN,projectId:config.FIREBASE_PROJECT_ID,appId:config.FIREBASE_APP_ID},
   stripePublishableKey:config.STRIPE_PUBLISHABLE_KEY, testMode:!config.STRIPE_SECRET_KEY.startsWith('sk_live_'),
 
