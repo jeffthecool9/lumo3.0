@@ -1,6 +1,6 @@
 # Lumo Development Checkpoint
 
-Updated 2026-09-30. This is a development preview, not a production launch.
+Updated 2026-10-01. This is a development preview, not a production launch.
 
 ## Source And Hosting
 
@@ -31,9 +31,10 @@ The backend contains Firebase verification, workspace authorization, scoped busi
 
 - The owner's `lumo-22425` Firebase project has Google and email/password sign-in enabled. `Lumo Web Preview` is registered, and the stable preview domain plus `localhost` and `127.0.0.1` are authorized.
 - Public web configuration and explicit Google/email provider flags are scoped to the Vercel preview branch. Phone/SMS remains disabled.
-- The server identity address is scoped to the same branch. The Firebase Admin private key must be added as a protected Vercel Secret for that branch before sign-up can unlock. The downloaded JSON is outside the repository and must never be committed.
+- The server identity address and Firebase Admin private key are scoped to the same branch; the private key is a protected Vercel Secret. The downloaded JSON is outside the repository and must never be committed.
 - `/api/config` exposes a method only when public configuration, server verification, database configuration and the explicit provider flag are all present. The sign-up screen shows a truthful unavailable state until then.
-- After adding the protected key, redeploy and verify `/api/config`, a real verified sign-in and workspace reload. Test two separate accounts before customer onboarding.
+- The preview was redeployed on 2026-10-01. Its sign-in screen now offers Google and email while phone remains hidden; no browser errors were observed. A real verified sign-in, workspace reload and two-account isolation test remain before customer onboarding.
+- Rotate the test Firebase Admin key before inviting customers, then update the preview Secret and redeploy.
 
 ### Malaysian Appointment Update
 
@@ -47,7 +48,7 @@ The backend contains Firebase verification, workspace authorization, scoped busi
 
 ### Remaining Connections
 
-1. Add the protected Firebase Admin key to the preview branch, redeploy, and verify two separate accounts. Do not paste private keys into chat or GitHub.
+1. Verify Google and email sign-in with two separate accounts, workspace persistence and isolation. Rotate the test Firebase Admin key before inviting customers. Do not paste private keys into chat or GitHub.
 2. Verify real account onboarding, data persistence and cross-business isolation against the hosted database.
 3. Configure Stripe test secret, recurring MYR99 price, portal, signed webhook, identity hash secret and reminder email sender. Complete billing lifecycle tests before live charging.
 4. Configure the chosen AI provider, benchmark actual costs, and only then enable the application and database AI switches. The current adapter is Gemini; OpenAI is not connected yet.
