@@ -13,7 +13,7 @@ describe('Lumo visual sales landing', () => {
   it('introduces one clear product and preserves the saved brief', () => {
     const html = render();
     expect(html.match(/<h1>/g)).toHaveLength(1);
-    expect(html).toContain('Lumo. Your AI');
+    expect(html).toContain('Lumo. Your Malaysian');
     expect(html).toContain('sales agent.');
     expect(html).toContain('My saved Malaysian business brief');
     expect(html).toContain('minLength="10"');
@@ -42,10 +42,29 @@ describe('Lumo visual sales landing', () => {
     expect(html).toContain('aria-controls="ls-mobile-nav"');
     expect(html).toContain('aria-current="step"');
     expect(html).toContain('aria-controls="ls-answer-0"');
-    expect(html).toContain('aria-label="Play sample story"');
+    expect(html).toContain('data-story-step="4"');
+    expect(html).not.toContain('Play sample story');
   });
   it('keeps the workspace entry for returning customers', () => {
     expect(render(true)).toContain('>Workspace</button>');
     expect(render(false)).toContain('>Log in</button>');
+  });
+  it('puts one usable conversation before the story and preserved builder', () => {
+    const html = render();
+    expect(html.match(/aria-label="Message the sample chatbot"/g)).toHaveLength(1);
+    expect(html.indexOf('id="playground"')).toBeLessThan(html.indexOf('id="how-it-works"'));
+    expect(html.indexOf('id="how-it-works"')).toBeLessThan(html.indexOf('id="builder"'));
+    expect(html).toContain('Not just replies.');
+    expect(html).toContain('Sales conversations.');
+    expect(html).toContain('maxLength="500"');
+    expect(html).toContain('Try this conversation');
+  });
+  it('connects approved prices to the answer without inventing a contact or checkout', () => {
+    const html = render();
+    expect(html).toContain('APPROVED PRODUCT RECORD');
+    expect(html).toContain('From the approved record');
+    expect(html).toContain('Contact details only with permission.');
+    expect(html).toContain('Confirm colour &amp; delivery');
+    expect(html).toContain('id="chapter-4"');
   });
 });

@@ -1,5 +1,24 @@
 import {describe, expect, it} from 'vitest';
-import {clamp, journeyPhase, journeyProgress, sceneMotion} from '../src/scroll-motion';
+import {clamp, journeyPhase, journeyProgress, sceneMotion, salesPhase, salesSceneMotion, salesStops} from '../src/scroll-motion';
+
+describe('five-stage connected sales story', () => {
+  it('lands controls on readable dwell states', () => {
+    salesStops.forEach((stop,index) => expect(salesPhase(stop)).toBe(index));
+  });
+  it('crossfades product evidence continuously without blank stages', () => {
+    for (let i=0;i<=100;i++) {
+      const phase = salesPhase(i/100);
+      const scenes = salesStops.map((_,index) => salesSceneMotion(phase,index));
+      expect(scenes.reduce((sum,scene) => sum + scene.opacity,0)).toBeCloseTo(1);
+      expect(scenes.every(scene => scene.scale >= .94 && scene.scale <= 1)).toBe(true);
+      const outgoing = Math.min(3,Math.floor(phase));
+      expect(scenes[outgoing].bottom + scenes[outgoing + 1].top).toBeCloseTo(100);
+      if (i) expect(phase).toBeGreaterThanOrEqual(salesPhase((i-1)/100));
+    }
+    expect(salesPhase(-1)).toBe(0);
+    expect(salesPhase(2)).toBe(4);
+  });
+});
 
 describe('cinematic scroll choreography', () => {
   it('holds each scene long enough to read before transitioning', () => {
