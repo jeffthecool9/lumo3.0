@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'vitest';
 import {emptyKnowledge, knowledgeSchema, planSchema} from '../shared/schema';
-import {appointmentBriefs, conversationLanguages} from '../shared/localization';
+import {appointmentBriefs, salesBriefs, conversationLanguages} from '../shared/localization';
 import {buildSystemInstruction} from '../server/ai-prompts';
-import {appointmentDemoReply, sampleLocale} from '../src/demo-conversation';
+import {appointmentDemoReply, salesDemoReply, sampleLocale} from '../src/demo-conversation';
 import {samplePlan, sampleState} from '../src/sample';
 import {businesses, demoReply} from '../src/landing-data';
 
@@ -23,7 +23,7 @@ describe('Malaysian conversation preferences', () => {
   it('keeps examples inside production plan and knowledge limits', () => {
     expect(planSchema.safeParse(samplePlan).success).toBe(true);
     expect(knowledgeSchema.safeParse(sampleState().knowledge).success).toBe(true);
-    for (const brief of appointmentBriefs) expect(brief.prompt.length).toBeLessThanOrEqual(3000);
+    for (const brief of [...appointmentBriefs,...salesBriefs]) expect(brief.prompt.length).toBeLessThanOrEqual(3000);
   });
 });
 
@@ -84,5 +84,27 @@ describe('clearly labelled multilingual fixtures', () => {
       expect(answer).not.toContain('可以试着询问');
       expect(answer).not.toContain('Cuba tanya');
     }
+  });
+});
+describe('sales agent scope and verified actions', () => {
+  it.each(['plan','reply'] as const)('qualifies buyers without forcing bookings in %s', kind => {
+    const text=buildSystemInstruction(kind,{knowledge:emptyKnowledge});
+    expect(text).toContain('qualify budget, purchase timing');
+    expect(text).toContain('Appointments are optional');
+    expect(text).toContain('never invent discounts');
+    expect(text).toContain('not proof of a won deal');
+    expect(text).toContain('Do not fabricate payment or checkout links');
+    expect(text).toContain('Ask permission before collecting contact details');
+  });
+  it('shows only the product fixture price and keeps checkout unavailable', () => {
+    expect(salesDemoReply('shop','How much is the tote?')).toContain('RM129');
+    expect(salesDemoReply('home','How much?')).not.toContain('RM129');
+    expect(salesDemoReply('shop','How do I buy?')).toContain('cannot place an order or take payment');
+  });
+  it('handles local objections and quotes without inventing a discount or saving leads', () => {
+    expect(salesDemoReply('salon','Mahal, ada pilihan lain?')).toContain('tidak boleh reka diskaun');
+    expect(salesDemoReply('shop','贵了，有别的选择吗？')).toContain('不能随意承诺折扣');
+    expect(salesDemoReply('home','I want a quote')).toContain('this demo saves no lead');
+    expect(salesDemoReply('shop','Refund please')).toContain('needs a person');
   });
 });

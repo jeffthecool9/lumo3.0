@@ -1,5 +1,9 @@
 # Lumo Development Checkpoint
 
+2026-10-03 local authentication update: replacement Admin credential validated against Google's API and referenced outside the repository through GOOGLE_APPLICATION_CREDENTIALS. Existing public web configuration and Google/email provider flags are configured in the ignored local .env. Google and email login buttons are enabled on localhost. Database credentials remain absent locally; authenticated workspace access still requires storage and membership verification. This does not update the hosted preview secret or revoke the older Google key. Real browser sign-in and two-account hosted isolation remain to be tested.
+
+2026-10-03 local update: landing page, sales fixtures, flow starters, sample plan, AI instructions and workspace overview now follow the sales-agent direction. Appointments remain optional. See SALES_AGENT.md. This update is local until explicitly published; the hosting checkpoint below records earlier deployments.
+
 Updated 2026-10-01. This is a development preview, not a production launch.
 
 ## Source And Hosting

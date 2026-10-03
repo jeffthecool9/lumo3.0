@@ -84,3 +84,44 @@ export function appointmentDemoReply(id: string, message: string, language: Conv
   if (id === 'home' && /\b(cover|location|kuala|area|kawasan|poskod)\b|地区|范围|吉隆坡/i.test(message)) return coverage[locale];
   return fallback[locale];
 }
+const objections: Replies = {
+  en: 'I understand you want to compare the value. I can explain the approved options, but cannot invent a discount. What matters most to you when choosing?',
+  ms: 'Faham, anda nak bandingkan nilainya. Saya boleh jelaskan pilihan yang disahkan, tetapi tidak boleh reka diskaun. Apa yang paling penting bagi anda?',
+  zh: '明白，您想比较是否值得。我可以说明已确认的选择，但不能随意承诺折扣。您选择时最在意什么？',
+  mixed: 'Faham, you want to compare value. 我们可以说明已确认的选择, but cannot promise a discount. What matters most to you?',
+};
+const quoteRequests: Replies = {
+  en: 'I can help you prepare a quote request. What product or service do you need? Your team would review the details in a connected service; this demo saves no lead.',
+  ms: 'Boleh sediakan permintaan sebut harga. Produk atau servis apa yang anda perlukan? Pasukan perlu semak butiran; demo ini tidak menyimpan lead.',
+  zh: '可以先整理报价需求。请问您需要哪种产品或服务？正式服务需要团队确认；这个示例不会保存潜在客户记录。',
+  mixed: 'Boleh, let us understand the quote request first. 您需要什么 product or service? The team checks the details; this demo saves no lead.',
+};
+const purchaseRequests: Replies = {
+  en: 'What product or service would you like to buy? A connected agent would use an approved purchase link or pass the details to your team. This demo cannot place an order or take payment.',
+  ms: 'Produk atau servis apa yang anda ingin beli? Ejen yang disambungkan perlu guna pautan pembelian yang disahkan atau rujuk pasukan. Demo ini tidak membuat pesanan atau menerima bayaran.',
+  zh: '请问您想购买哪种产品或服务？正式连接后需要使用已确认的购买链接，或由团队处理。此示例不会下单或收款。',
+  mixed: 'Boleh. Which product or service would you like? 购买需要已确认的链接或团队处理. This demo cannot place an order or take payment.',
+};
+const productPrice: Replies = {
+  en: 'The illustrative canvas tote is RM129. Stock and delivery need team confirmation. What would you like to use it for?',
+  ms: 'Beg tote kanvas dalam contoh ini berharga RM129. Stok dan penghantaran perlu disahkan oleh pasukan. Anda nak guna untuk apa?',
+  zh: '示例中的帆布袋是 RM129。库存和配送需要团队确认。请问您打算用来做什么？',
+  mixed: 'The sample canvas tote is RM129. Stok and delivery need team confirmation. 您打算用来做什么？',
+};
+const salesFallback: Replies = {
+  en: 'What are you looking for, and what matters most when choosing? This is a preset sales example; it cannot save a lead, contact your team or complete a sale.',
+  ms: 'Anda mencari apa, dan apa yang penting semasa memilih? Ini contoh jualan tetap; ia tidak menyimpan lead, menghubungi pasukan atau menyelesaikan jualan.',
+  zh: '请问您在找什么，选择时最在意什么？这是预设销售示例，不会保存客户记录、联系团队或完成销售。',
+  mixed: 'Nak cari apa, and what matters most? 您可以自然混合语言. This preset demo cannot save a lead or complete a sale.',
+};
+
+export function salesDemoReply(id: string, message: string, language: ConversationLanguage = 'Malaysian mix', previous = '') {
+  const locale = sampleLocale(message, language, previous);
+  if (/\b(human|person|staff|cancel|reschedule|refund|complaint|batal|tukar|aduan)\b|人工|取消|改期|退款|投诉/i.test(message)) return appointmentDemoReply(id,message,language,previous);
+  if (/\b(expensive|mahal|discount|cheaper|alternatives)\b|贵|折扣|便宜|别的选择/i.test(message)) return objections[locale];
+  if (/\b(quote|quotation|sebut harga)\b|报价/i.test(message)) return quoteRequests[locale];
+  if (/\b(buy|purchase|order|beli|checkout)\b|购买|下单/i.test(message)) return purchaseRequests[locale];
+  if (id === 'shop' && /\b(price|cost|much|harga|caj|fees)\b|多少钱|价格|收费|价钱|几钱/i.test(message)) return productPrice[locale];
+  const response = appointmentDemoReply(id,message,language,previous);
+  return response === fallback[locale] ? salesFallback[locale] : response;
+}

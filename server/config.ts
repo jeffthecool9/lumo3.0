@@ -8,6 +8,7 @@ const env = z.object({
   FIREBASE_API_KEY: z.string().default(''), FIREBASE_AUTH_DOMAIN: z.string().default(''),
   FIREBASE_PROJECT_ID: z.string().default(''), FIREBASE_APP_ID: z.string().default(''),
   FIREBASE_CLIENT_EMAIL: z.string().default(''), FIREBASE_PRIVATE_KEY: z.string().default(''),
+  FIREBASE_SERVICE_ACCOUNT_JSON: z.string().default(''),
   GOOGLE_APPLICATION_CREDENTIALS: z.string().default(''),
   AUTH_GOOGLE_ENABLED: z.enum(['true', 'false']).default('false'),
   AUTH_EMAIL_ENABLED: z.enum(['true', 'false']).default('false'),
@@ -24,7 +25,7 @@ if (env.STRIPE_SECRET_KEY.startsWith('sk_live_') && env.ALLOW_LIVE_BILLING !== '
 export const config = env;
 export const readiness = {
   auth: Boolean(env.FIREBASE_API_KEY && env.FIREBASE_AUTH_DOMAIN && env.FIREBASE_PROJECT_ID && env.FIREBASE_APP_ID),
-  authServer: Boolean(env.FIREBASE_PROJECT_ID && ((env.FIREBASE_CLIENT_EMAIL && env.FIREBASE_PRIVATE_KEY) || env.GOOGLE_APPLICATION_CREDENTIALS)),
+  authServer: Boolean(env.FIREBASE_PROJECT_ID && ((env.FIREBASE_CLIENT_EMAIL && env.FIREBASE_PRIVATE_KEY) || env.FIREBASE_SERVICE_ACCOUNT_JSON || env.GOOGLE_APPLICATION_CREDENTIALS)),
   database: Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY),
   billing: Boolean(env.STRIPE_SECRET_KEY && env.STRIPE_PRICE_ID && env.STRIPE_WEBHOOK_SECRET && env.IDENTITY_HASH_SECRET.length >= 32),
   ai: Boolean(env.GEMINI_API_KEY && env.AI_ENABLED === 'true' && env.AI_PRICING_VERIFIED === 'true'),

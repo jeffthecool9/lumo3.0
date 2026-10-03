@@ -8,6 +8,7 @@ describe('unconfigured API fails closed',()=>{
     expect(result.body).not.toHaveProperty('STRIPE_SECRET_KEY');
     expect(result.body).not.toHaveProperty('SUPABASE_SERVICE_ROLE_KEY');
     expect(result.body).not.toHaveProperty('FIREBASE_PRIVATE_KEY');
+    expect(result.body).not.toHaveProperty('FIREBASE_SERVICE_ACCOUNT_JSON');
     expect(result.body).not.toHaveProperty('FIREBASE_CLIENT_EMAIL');
     expect(result.body.authMethods).toEqual({google:false,email:false,phone:false});
   });

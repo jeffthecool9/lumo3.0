@@ -1,5 +1,7 @@
 # Lumo Full Product Roadmap
 
+Direction update, 2026-10-03: Lumo is a Malaysian lead-generation and sales agent. Appointments are one optional feature. See [Sales Agent Delivery Plan](SALES_AGENT.md) for the current delivery priorities and RM99 launch requirements; the earlier milestones below describe the existing foundation.
+
 ## Product Boundary
 
 Lumo is a business workspace, not only a chatbot. A business owner should be able to describe the business, approve the assistant's behaviour, connect a customer-owned channel, and handle leads, conversations and appointments in one place. The landing-page theme and blue Lumo identity remain the starting point.
@@ -39,8 +41,8 @@ The operator dashboard, delegated support access and audit log are future work, 
 | --- | --- | --- |
 | React + Vite | Landing page and business workspace | Implemented |
 | Vercel | Web hosting and short API requests | Deployment configuration added |
-| Firebase Auth | Google, verified email, verified phone identity | Integration code; provider setup required |
-| Supabase PostgreSQL | Linked business records, subscription state and quotas | Three migrations; hosted database not connected |
+| Firebase Auth | Google and verified email identity; phone deferred | Preview configured; hosted two-account verification remains |
+| Supabase PostgreSQL | Linked business records, subscription state and quotas | Three migrations applied to test project; preview connected |
 | Stripe | Checkout, saved payment method, renewal and portal | Test-mode integration; credentials and tests required |
 | AI adapter | Plan JSON and private test replies | Existing Gemini adapter; disabled without configuration |
 | Durable queue / worker | WhatsApp events, outbound delivery, retries | Future milestone |

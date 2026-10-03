@@ -18,7 +18,7 @@ export function AuthPanel({config,user,onSuccess,initialMode='login'}:{config:Pu
   useEffect(()=>{const t=setInterval(()=>setSeconds(n=>Math.max(0,n-1)),1000);return()=>{clearInterval(t);captcha.current?.clear();};},[]);
   useEffect(()=>{if(user&&!user.emailVerified&&!user.phoneNumber)setScreen('verify');},[user?.uid]);
   function route(next:Screen){setScreen(next);setError('');setNotice('');}
-  function requireAuth(method?:AuthMethod){if(!auth||!config?.auth||!config.authServer||!config.database)throw new Error('Sign-in setup is not complete yet. Explore the sample workspace while we finish connecting it.');if(method&&!methods[method])throw new Error('This sign-in method is not available yet. Please choose another method.');return auth;}
+  function requireAuth(method?:AuthMethod){if(!auth||!config?.auth||!config.authServer)throw new Error('Sign-in setup is not complete yet. Explore the sample workspace while we finish connecting it.');if(method&&!methods[method])throw new Error('This sign-in method is not available yet. Please choose another method.');return auth;}
   async function perform(name:string,fn:()=>Promise<void>){setBusy(name);setError('');setNotice('');try{await fn();}catch(e){setError(authError(e));}finally{setBusy('');}}
   async function google(){await perform('google',async()=>{const provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});const result=await signInWithPopup(requireAuth('google'),provider);if(result.user.emailVerified||result.user.phoneNumber)onSuccess();else route('verify');});}
   async function emailSubmit(e:React.FormEvent){e.preventDefault();await perform('email',async()=>{

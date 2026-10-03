@@ -5,7 +5,7 @@ export function availableAuthMethods(config: {
   auth: boolean; authServer: boolean; database: boolean;
   authMethods?: Partial<AuthMethods>;
 } | null): AuthMethods {
-  const ready = Boolean(config?.auth && config.authServer && config.database);
+  const ready = Boolean(config?.auth && config.authServer);
   return {
     google: ready && config?.authMethods?.google === true,
     email: ready && config?.authMethods?.email === true,

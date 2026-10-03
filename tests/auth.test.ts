@@ -10,11 +10,14 @@ describe('sign-up availability',()=>{
     expect(availableAuthMethods({...configured,authMethods:undefined})).toEqual({google:false,email:false,phone:false});
     expect(availableAuthMethods(null)).toEqual({google:false,email:false,phone:false});
   });
-  it.each(['auth','authServer','database'] as const)('blocks account creation without %s',missing=>{
+  it.each(['auth','authServer'] as const)('blocks account creation without %s',missing=>{
     expect(availableAuthMethods({...configured,[missing]:false})).toEqual({google:false,email:false,phone:false});
   });
   it('requires an explicit phone opt-in',()=>{
     expect(availableAuthMethods({...configured,authMethods:{google:true,email:true,phone:true}}).phone).toBe(true);
+  });
+  it('allows verified sign-in while workspace storage is unavailable',()=>{
+    expect(availableAuthMethods({...configured,database:false})).toEqual({google:true,email:true,phone:false});
   });
 });
 describe('verified Firebase account requirements',()=>{
