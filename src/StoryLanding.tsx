@@ -3,7 +3,9 @@ import {ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Check, CheckCheck, Chevro
 import {Brand, BrandMark} from './Brand';
 import {readDraft, saveDraft} from './api';
 import {businesses, demoReply} from './landing-data';
+import {clamp, journeyPhase, journeyProgress, sceneMotion} from './scroll-motion';
 import './story-landing.css';
+import './cinematic.css';
 
 const chapters = [
   {title: 'Your facts.\nNot a guess.', text: 'Approved products, RM prices and policies. Give every answer a reliable starting point.', label: 'Ground the answer', icon: BookOpen},
@@ -47,6 +49,69 @@ function Scene({stage}: {stage: number}) {
   </div>;
 }
 
+function CinematicJourney() {
+  const host = useRef<HTMLElement>(null);
+  const [stage, setStage] = useState(0);
+  useEffect(() => {
+    const section = host.current;
+    if (!section) return;
+    const media = matchMedia('(prefers-reduced-motion: reduce)');
+    const panels = [...section.querySelectorAll<HTMLElement>('.ls-cinema-panel')];
+    let frame = 0;
+    let current = -1;
+    const update = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        const desktop = innerWidth > 800 && innerHeight > 600 && !media.matches;
+        const header = document.querySelector('.ls-header')?.getBoundingClientRect().height ?? 80;
+        const rect = section.getBoundingClientRect();
+        const progress = journeyProgress(rect.top, section.offsetHeight, innerHeight, header);
+        const phase = journeyPhase(progress);
+        const active = Math.round(phase);
+        section.style.setProperty('--journey-progress', String(progress));
+        panels.forEach((panel, i) => {
+          const motion = sceneMotion(phase, i);
+          panel.style.setProperty('--cut-top', `${motion.top}%`);
+          panel.style.setProperty('--cut-bottom', `${motion.bottom}%`);
+          panel.style.setProperty('--scene-drift', `${motion.drift}px`);
+          panel.style.setProperty('--copy-opacity', String(motion.copyOpacity));
+          panel.style.setProperty('--beat', String(clamp((progress - [0, .39, .77][i]) / [.23, .22, .23][i])));
+          panel.setAttribute('aria-hidden', String(desktop && active !== i));
+          panel.inert = desktop && active !== i;
+        });
+        if (current !== active) {current = active; setStage(active);}
+        frame = 0;
+      });
+    };
+    window.addEventListener('scroll', update, {passive: true});
+    window.addEventListener('resize', update);
+    media.addEventListener('change', update);
+    update();
+    return () => {window.removeEventListener('scroll', update); window.removeEventListener('resize', update); media.removeEventListener('change', update); cancelAnimationFrame(frame);};
+  }, []);
+  function select(index: number) {
+    const section = host.current;
+    if (!section) return;
+    const media = matchMedia('(prefers-reduced-motion: reduce)');
+    if (innerWidth <= 800 || innerHeight <= 600 || media.matches) {goTo(`chapter-${index}`); return;}
+    const header = document.querySelector('.ls-header')?.getBoundingClientRect().height ?? 80;
+    const start = section.getBoundingClientRect().top + scrollY - header;
+    const travel = section.offsetHeight - innerHeight + header;
+    window.scrollTo({top: start + travel * [.08, .57, .91][index], behavior: 'smooth'});
+  }
+  return <section className="ls-difference ls-cinema" id="how-it-works" ref={host}>
+    <div className="ls-cinema-pin"><div className="ls-wrap ls-cinema-inner">
+      <div className="ls-section-top"><span>THE LUMO DIFFERENCE</span><span>LESS COPY-PASTE. MORE CONTEXT.</span></div>
+      <div className="ls-cinema-stage">{chapters.map((item, i) => <article className="ls-cinema-panel" id={`chapter-${i}`} key={item.label} data-scene={i}>
+        <div className="ls-cinema-copy"><span className="ls-chapter-number">0{i + 1}<item.icon size={24}/></span><h2>{item.title}</h2><p>{item.text}</p><a className="ls-text-link" href="/sample">See the workspace<ArrowUpRight size={18}/></a></div>
+        <div className="ls-cinema-product"><Scene stage={i}/></div>
+      </article>)}</div>
+      <nav className="ls-cinema-nav" aria-label="Product story chapters">{chapters.map((item, i) => <button key={item.label} aria-current={stage === i ? 'step' : undefined} onClick={() => select(i)}><span>0{i + 1}</span>{item.label}<ArrowDown size={15}/></button>)}</nav>
+      <div className="ls-cinema-track" aria-hidden="true"><span/></div>
+    </div></div>
+  </section>;
+}
+
 function HeroFilm() {
   const [frame, setFrame] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -55,12 +120,28 @@ function HeroFilm() {
   const host = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const media = matchMedia('(prefers-reduced-motion: reduce)');
-    const change = () => {setReduced(media.matches); setPlaying(!media.matches);};
+    const change = () => {setReduced(media.matches); setPlaying(false);};
     change(); media.addEventListener('change', change);
     const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), {threshold: .2});
     if (host.current) observer.observe(host.current);
     return () => {media.removeEventListener('change', change); observer.disconnect();};
   }, []);
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      if (frame || playing || reduced || !host.current) return;
+      frame = requestAnimationFrame(() => {
+        if (host.current) {
+          const rect = host.current.getBoundingClientRect();
+          const progress = clamp((innerHeight * .65 - rect.top) / Math.max(rect.height, innerHeight * .7));
+          setFrame(Math.min(2, Math.floor(progress * 3)));
+        }
+        frame = 0;
+      });
+    };
+    window.addEventListener('scroll', update, {passive: true});
+    return () => {window.removeEventListener('scroll', update); cancelAnimationFrame(frame);};
+  }, [playing, reduced]);
   useEffect(() => {
     if (!playing || !visible || reduced) return;
     const timer = setInterval(() => setFrame(n => (n + 1) % 3), 4200);
@@ -113,7 +194,6 @@ function DemoChat() {
 export function StoryLanding({onStart, onLogin, signedIn, theme, onTheme}: {onStart: () => void; onLogin: () => void; signedIn: boolean; theme: 'dark' | 'light'; onTheme: () => void}) {
   const [prompt, setPrompt] = useState(readDraft);
   const [menu, setMenu] = useState(false);
-  const [chapter, setChapter] = useState(0);
   const [businessIndex, setBusinessIndex] = useState(2);
   const [faq, setFaq] = useState<number | null>(null);
   const root = useRef<HTMLDivElement>(null);
@@ -124,12 +204,37 @@ export function StoryLanding({onStart, onLogin, signedIn, theme, onTheme}: {onSt
     if (!page) return;
     const reveal = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {entry.target.classList.add('is-visible'); reveal.unobserve(entry.target);}}), {threshold: .08});
     page.querySelectorAll('[data-reveal]').forEach(el => reveal.observe(el));
-    const story = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) setChapter(Number((entry.target as HTMLElement).dataset.chapter));}), {rootMargin: '-35% 0px -40% 0px', threshold: 0});
-    page.querySelectorAll('[data-chapter]').forEach(el => story.observe(el));
+    const media = matchMedia('(prefers-reduced-motion: reduce)');
+    const motionGroups = [
+      ['.ls-cinema-copy h2, .ls-demo-intro h2, .ls-business-heading h2, .ls-price-title h2, .ls-faq h2, .ls-close h2', 'headline'],
+      ['.ls-demo-window', 'lift'], ['.ls-business-media', 'image'], ['.ls-business-copy', 'wipe'],
+      ['.ls-price, .ls-allowances', 'numbers'], ['.ls-faq-item', 'row'],
+      ['.ls-close', 'finale'], ['.ls-big-brand', 'wordmark'], ['.ls-film-band', 'opening'],
+    ];
+    motionGroups.forEach(([selector, mode]) => page.querySelectorAll<HTMLElement>(selector).forEach(el => {el.dataset.motion = mode;}));
+    const targets = [...page.querySelectorAll<HTMLElement>('[data-motion]')];
+    const visible = new Set<HTMLElement>();
+    const motionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {const el = entry.target as HTMLElement; if (entry.isIntersecting) visible.add(el); else visible.delete(el);});
+      update();
+    }, {rootMargin: '180px 0px'});
+    targets.forEach(el => motionObserver.observe(el));
     let frame = 0;
-    const update = () => {if (frame) return; frame = requestAnimationFrame(() => {const max = document.documentElement.scrollHeight - innerHeight; if (progress.current) progress.current.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`; frame = 0;});};
+    function update() {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        const values = [...visible].map(el => {const rect = el.getBoundingClientRect(); const range = el.dataset.motion === 'headline' ? .32 : .43; return {el, reveal: clamp((innerHeight * .94 - rect.top) / (innerHeight * range)), drift: clamp((rect.top + rect.height / 2 - innerHeight / 2) / innerHeight, -1, 1)};});
+        if (progress.current) progress.current.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+        values.forEach(({el, reveal, drift}) => {el.style.setProperty('--reveal', String(media.matches ? 1 : reveal)); el.style.setProperty('--drift', String(media.matches ? 0 : drift));});
+        const hero = page?.querySelector<HTMLElement>('.ls-hero');
+        hero?.style.setProperty('--hero-exit', String(media.matches ? 0 : clamp(scrollY / innerHeight)));
+        frame = 0;
+      });
+    }
     window.addEventListener('scroll', update, {passive: true}); window.addEventListener('resize', update); update();
-    return () => {reveal.disconnect(); story.disconnect(); window.removeEventListener('scroll', update); window.removeEventListener('resize', update); cancelAnimationFrame(frame);};
+    media.addEventListener('change', update);
+    return () => {reveal.disconnect(); motionObserver.disconnect(); media.removeEventListener('change', update); window.removeEventListener('scroll', update); window.removeEventListener('resize', update); cancelAnimationFrame(frame);};
   }, []);
   useEffect(() => {const escape = (event: KeyboardEvent) => {if (event.key === 'Escape') setMenu(false);}; window.addEventListener('keydown', escape); return () => window.removeEventListener('keydown', escape);}, []);
   function updatePrompt(value: string) {setPrompt(value); saveDraft(value);}
@@ -144,7 +249,7 @@ export function StoryLanding({onStart, onLogin, signedIn, theme, onTheme}: {onSt
         <div className="ls-hero-links"><span><Check size={15}/>No code needed</span><a href="#playground">Try a sample first<ArrowUpRight size={15}/></a></div>
       </section>
       <section className="ls-film-band"><div className="ls-wrap"><HeroFilm/></div></section>
-      <section className="ls-difference" id="how-it-works"><div className="ls-wrap"><div className="ls-section-top"><span>THE LUMO DIFFERENCE</span><span>LESS COPY-PASTE. MORE CONTEXT.</span></div><div className="ls-story-layout"><div className="ls-chapters">{chapters.map((item, i) => <article id={`chapter-${i}`} data-chapter={i} key={item.label} className={chapter === i ? 'active' : ''}><span className="ls-chapter-number">0{i + 1}<item.icon size={22}/></span><h2>{item.title}</h2><p>{item.text}</p><a className="ls-text-link" href="/sample">See the workspace<ArrowUpRight size={18}/></a><div className="ls-mobile-scene"><Scene stage={i}/></div></article>)}</div><div className="ls-sticky-scene"><Scene stage={chapter}/><div className="ls-chapter-nav" aria-label="Product story chapters">{chapters.map((c, i) => <button key={c.label} aria-current={chapter === i ? 'step' : undefined} onClick={() => goTo(`chapter-${i}`)}><span>0{i + 1}</span>{c.label}</button>)}</div></div></div></div></section>
+      <CinematicJourney/>
       <DemoChat/>
       <section className="ls-business-band" id="use-cases"><div className="ls-wrap"><div className="ls-section-top"><span>SELL PRODUCTS. SELL SERVICES.</span><span>APPOINTMENTS ARE JUST ONE NEXT STEP.</span></div><div className="ls-business-heading" data-reveal><h2>Your business.<br/>Your way to sell.</h2><div role="group" aria-label="Business examples" className="ls-business-selector">{businesses.map((b, i) => <button aria-pressed={businessIndex === i} key={b.id} onClick={() => setBusinessIndex(i)}><b.icon size={20}/>{b.label}<ArrowUpRight size={18}/></button>)}</div></div><div className="ls-business-feature" key={business.id}><div className="ls-business-media"><img src={business.image} alt={business.alt} loading="lazy"/><span><business.icon size={18}/>{business.name} / Sample business</span></div><div className="ls-business-copy"><span className="ls-kicker">{business.category}</span><h3>{business.headline}</h3><p>{business.description}</p><button className="ls-text-link" onClick={() => useExample(businessIndex)}>Use this starting point<ArrowUpRight size={18}/></button></div></div></div></section>
       <section className="ls-pricing ls-wrap" id="pricing"><div className="ls-section-top"><span>A CLEAR START</span><span>NO AUTOMATIC OVERAGE CHARGES.</span></div><div className="ls-price-layout"><div className="ls-price-title" data-reveal><span className="ls-kicker">LUMO STARTER / LAUNCH PLAN</span><h2>One business.<br/>One sales workspace.</h2><p>Build, review and privately rehearse.<br/>Keep the facts and the next action together.</p><a className="ls-text-link" href="/sample">Explore before you decide<ArrowUpRight size={18}/></a><div className="ls-launch-status"><span className="ls-dot"/>Preview available. Subscriptions open at launch.</div></div><div className="ls-price-details" data-reveal><div className="ls-price"><span>RM</span><strong>99</strong><span>/ month</span></div><div className="ls-allowances"><div><strong>30</strong><span>Plan generations<br/>or AI revisions / month</span></div><div><strong>500</strong><span>Private test<br/>replies / month</span></div></div><p className="ls-price-note ls-limit-note">US$5 AI budget/month. Usage stops at the first allowance or budget limit reached.</p><ul>{['Approved business knowledge & products', 'Editable flows, approval & version history', 'Lead workspace & guided setup'].map(item => <li key={item}><Check size={17}/>{item}</li>)}</ul><button className="ls-button" onClick={begin}>Start with your business<ArrowUpRight size={18}/></button><p className="ls-price-note">At launch: 7-day card-required trial. RM0 today, then RM99/month. Renews automatically until cancelled. Billing date shown at checkout.</p><details className="ls-budget"><summary>Trial allowances & AI budget limits<ChevronDown size={16}/></summary><p>Trial: 3 generations, 50 replies, US$0.50 AI budget total. Paid: US$5 AI budget/month. The first reached allowance or budget limit applies; you may reach the budget before all replies are used. No live WhatsApp, customer checkout or automated follow-ups in this release.</p></details></div></div></section>
