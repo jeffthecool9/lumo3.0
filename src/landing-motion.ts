@@ -1,99 +1,69 @@
 import {useEffect, RefObject} from 'react';
-import {clamp, journeyProgress, salesPhase, salesSceneMotion} from './scroll-motion';
+import {clamp, salesPhase, salesSceneMotion} from './scroll-motion';
 
+// One scroll owner. The decorative renderer consumes this timeline, not scroll events.
 export function useLandingMotion(root: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
-    const page = root.current;
-    if (!page) return;
-    const media = matchMedia('(prefers-reduced-motion: reduce)');
-    const targets = [...page.querySelectorAll<HTMLElement>('[data-motion]')];
-    const story = page.querySelector<HTMLElement>('.ls-sales-story');
-    const panels = [...page.querySelectorAll<HTMLElement>('.ls-sales-panel')];
-    const controls = [...page.querySelectorAll<HTMLElement>('[data-story-step]')];
-    const rail = page.querySelector<HTMLElement>('.ls-progress');
-    const hero = page.querySelector<HTMLElement>('.ls-hero');
-    const nearby = new Set<HTMLElement>();
-    let frame = 0;
-    let active = -1;
-    let frozen = false;
-    let storyProgress = 0;
-    let previousPhase = -1;
-    let previousPinned: boolean | null = null;
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        const el = entry.target as HTMLElement;
-        if (entry.isIntersecting) nearby.add(el); else nearby.delete(el);
-      });
-      update();
-    }, {rootMargin:'160px 0px'});
-    targets.forEach(el => observer.observe(el));
-    if (story) observer.observe(story);
-
-    function update() {
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        const header = page!.querySelector('.ls-header')?.getBoundingClientRect().height ?? 80;
-        const pinned = innerWidth > 800 && innerHeight > 650 && !media.matches;
-        const heroRect = hero?.getBoundingClientRect();
-        const holdDecoration = frozen && !!heroRect && heroRect.bottom > header && heroRect.top < innerHeight;
-        const max = document.documentElement.scrollHeight - innerHeight;
-        // Read layout first, then batch all animation writes.
-        const measurements = [...nearby].filter(el => el !== story).map(el => {
-          const rect = el.getBoundingClientRect();
-          return {el, reveal:clamp((innerHeight * .95 - rect.top) / (innerHeight * .32)), drift:clamp((rect.top + rect.height / 2 - innerHeight / 2) / innerHeight, -1, 1)};
-        });
-        if (story && (nearby.has(story) || active < 0)) {
-          const rect = story.getBoundingClientRect();
-          storyProgress = journeyProgress(rect.top, rect.height, innerHeight, header);
-        }
-        const phase = salesPhase(storyProgress);
-        const next = Math.round(phase);
-        rail?.style.setProperty('transform', `scaleX(${max > 0 ? scrollY / max : 0})`);
-        if (!holdDecoration || media.matches) {
-          measurements.forEach(({el, reveal, drift}) => {
-            el.style.setProperty('--reveal', String(media.matches ? 1 : reveal));
-            el.style.setProperty('--drift', String(media.matches ? 0 : drift));
+    let disposed = false;
+    let clean = () => {};
+    Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{gsap}, {ScrollTrigger}]) => {
+      if (disposed || !root.current) return;
+      gsap.registerPlugin(ScrollTrigger);
+      const page = root.current;
+      const media = gsap.matchMedia();
+      media.add({all:'all', desktop:'(min-width: 801px) and (min-height: 651px)', reduced:'(prefers-reduced-motion: reduce)'}, context => {
+        const {desktop, reduced} = context.conditions!;
+        const panels = [...page.querySelectorAll<HTMLElement>('.ls-sales-panel')];
+        const controls = [...page.querySelectorAll<HTMLElement>('[data-story-step]')];
+        const story = page.querySelector<HTMLElement>('.ls-sales-story');
+        const reset = () => panels.forEach(panel => {panel.inert = false; panel.removeAttribute('aria-hidden');});
+        reset();
+        if (!reduced) {
+          page.querySelectorAll<HTMLElement>('[data-motion]').forEach(el => {
+            gsap.fromTo(el, {'--reveal':0, '--drift':.5}, {'--reveal':1, '--drift':-.5, ease:'none', scrollTrigger:{trigger:el, start:'top 94%', end:'top 45%', scrub:true}});
           });
         }
-        if (phase !== previousPhase || pinned !== previousPinned) {
-          panels.forEach((panel, index) => {
-            const motion = salesSceneMotion(phase, index);
-            panel.style.setProperty('--scene-opacity', String(motion.opacity));
-            panel.style.setProperty('--scene-y', `${motion.y}px`);
-            panel.style.setProperty('--scene-scale', String(motion.scale));
-            panel.style.setProperty('--scene-cut-top', `${motion.top}%`);
-            panel.style.setProperty('--scene-cut-bottom', `${motion.bottom}%`);
-            panel.setAttribute('aria-hidden', String(pinned && index !== next));
-            panel.inert = pinned && index !== next;
-          });
-          if (active !== next) {
-            controls.forEach((button, index) => {
-              if (index === next) button.setAttribute('aria-current','step'); else button.removeAttribute('aria-current');
+        if (desktop && !reduced && story) {
+          const update = (progress:number, entry=1) => {
+            const phase = salesPhase(progress);
+            const active = Math.round(phase);
+            panels.forEach((panel,index) => {
+              const m = salesSceneMotion(phase,index);
+              panel.style.setProperty('--scene-opacity', String(m.opacity));
+              panel.style.setProperty('--scene-y', `${m.y}px`);
+              panel.style.setProperty('--scene-scale', String(m.scale));
+              panel.style.setProperty('--scene-cut-top', `${m.top}%`);
+              panel.style.setProperty('--scene-cut-bottom', `${m.bottom}%`);
+              panel.inert = active !== index;
+              panel.setAttribute('aria-hidden', String(active !== index));
             });
-            active = next;
-          }
-          previousPhase = phase;
-          previousPinned = pinned;
+            controls.forEach((el,index) => {if (index === active) el.setAttribute('aria-current','step'); else el.removeAttribute('aria-current');});
+            story.style.setProperty('--story-progress', String(progress));
+            page.dataset.scenePhase = String(phase);
+            page.dataset.sceneProgress = String(progress);
+            page.dataset.sceneEntry = String(entry);
+            page.style.setProperty('--scene-entry',String(entry));
+            page.dispatchEvent(new CustomEvent('lumo:scene', {detail:{phase, progress, entry}}));
+          };
+          ScrollTrigger.create({trigger:story,start:'top bottom',end:'top 80px',onUpdate:self => {if(self.progress<1) update(0,self.progress);}});
+          const settlement = () => clamp((innerHeight-story.getBoundingClientRect().top)/(innerHeight-80));
+          ScrollTrigger.create({trigger:story, start:'top 80px', end:'bottom bottom', onUpdate:self => update(self.progress,settlement()), onRefresh:self => update(self.progress,settlement())});
+          update(0,settlement());
+        } else {
+          page.dataset.scenePhase = '0'; page.dataset.sceneProgress = '0';
+          page.dataset.sceneEntry = '0';
+          page.style.setProperty('--scene-entry','0');
+          page.dispatchEvent(new CustomEvent('lumo:scene', {detail:{phase:0, progress:0, entry:0}}));
         }
-        if (story && nearby.has(story)) story.style.setProperty('--story-progress', String(storyProgress));
-        frame = 0;
+        return reset;
       });
-    }
-    function focusChanged() {
-      frozen = !!page!.querySelector('.ls-hero-demo input:focus');
-      update();
-    }
-    window.addEventListener('scroll', update, {passive:true});
-    window.addEventListener('resize', update);
-    page.addEventListener('focusin', focusChanged);
-    page.addEventListener('focusout', focusChanged);
-    media.addEventListener('change', update);
-    update();
-    return () => {
-      observer.disconnect(); cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', update); window.removeEventListener('resize', update);
-      page.removeEventListener('focusin', focusChanged); page.removeEventListener('focusout', focusChanged);
-      media.removeEventListener('change', update);
-    };
+      const context = gsap.context(() => {
+        const rail = page.querySelector('.ls-progress');
+        if (rail) gsap.fromTo(rail,{scaleX:0},{scaleX:1,ease:'none',scrollTrigger:{trigger:page,start:'top top',end:'bottom bottom',scrub:true}});
+      },page);
+      clean = () => {media.revert(); context.revert();};
+      ScrollTrigger.refresh();
+    }).catch(() => {if(!disposed) root.current?.classList.add('motion-unavailable');});
+    return () => {disposed = true; clean();};
   }, [root]);
 }

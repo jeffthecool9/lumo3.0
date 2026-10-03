@@ -49,15 +49,26 @@ describe('Lumo visual sales landing', () => {
     expect(render(true)).toContain('>Workspace</button>');
     expect(render(false)).toContain('>Log in</button>');
   });
-  it('puts one usable conversation before the story and preserved builder', () => {
+  it('provides one persistent conversation in a labelled dialog and preserved builder', () => {
     const html = render();
     expect(html.match(/aria-label="Message the sample chatbot"/g)).toHaveLength(1);
-    expect(html.indexOf('id="playground"')).toBeLessThan(html.indexOf('id="how-it-works"'));
+    expect(html).toContain('<dialog id="playground"');
+    expect(html).toContain('aria-labelledby="demo-title"');
+    expect(html).toContain('aria-label="Close demo"');
+    expect(html).toContain('id="try-lumo"');
     expect(html.indexOf('id="how-it-works"')).toBeLessThan(html.indexOf('id="builder"'));
     expect(html).toContain('Not just replies.');
     expect(html).toContain('Sales conversations.');
     expect(html).toContain('maxLength="500"');
     expect(html).toContain('Try this conversation');
+  });
+  it('keeps static artwork, decorative canvas host and accessible workspace tabs', () => {
+    const html = render();
+    expect(html).toContain('class="ls-scene-shell" aria-hidden="true"');
+    expect(html).toContain('class="ls-static-art"');
+    expect(html).toContain('role="tablist" aria-label="Workspace views"');
+    expect(html).toContain('aria-controls="showcase-panel-2"');
+    expect(html).toContain('No real lead has been created.');
   });
   it('connects approved prices to the answer without inventing a contact or checkout', () => {
     const html = render();

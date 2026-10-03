@@ -1,12 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Check, CheckCheck, ChevronDown, Globe2, LockKeyhole, Menu, MessageSquare, Moon, Plus, RotateCcw, Send, ShieldCheck, Sparkles, Sun, Target, Users, X} from 'lucide-react';
 import {Brand, BrandMark} from './Brand';
 import {readDraft, saveDraft} from './api';
 import {businesses, demoReply} from './landing-data';
 import {salesStops} from './scroll-motion';
 import {useLandingMotion} from './landing-motion';
+import {LumoScene} from './LumoScene';
+import {ProductShowcase} from './ProductShowcase';
+import {useDemoModal} from './use-demo-modal';
 import './story-landing.css';
 import './cinematic.css';
+import './experience.css';
 
 const stages = [
   {label:'The enquiry', title:'A question. An opportunity.', detail:'Start where your customer starts.', icon:MessageSquare},
@@ -24,6 +28,7 @@ const questions = [
 ];
 
 function goTo(id: string, focus = false) {
+  if (id === 'playground') {document.dispatchEvent(new Event('lumo:open-demo')); return;}
   document.getElementById(id)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block:'start'});
   if (focus) document.getElementById('business-idea')?.focus({preventScroll:true});
 }
@@ -76,7 +81,7 @@ function SalesStory() {
     <div className="ls-sales-pin"><div className="ls-wrap ls-sales-inner">
       <div className="ls-section-top"><span>ONE ENQUIRY. MORE POSSIBILITIES.</span><span>EVERYDAY STUDIO / ILLUSTRATIVE STORY</span></div>
       <div className="ls-sales-stage">{stages.map((stage,index) => <article className="ls-sales-panel" id={`chapter-${index}`} key={stage.label} data-scene={index}>
-        <div className="ls-sales-caption"><span className="ls-sales-number">0{index+1}<stage.icon size={20}/></span><h2>{stage.title}</h2><p>{stage.detail}</p></div>
+        <div className="ls-sales-caption"><span className="ls-sales-number">0{index+1}<stage.icon size={20}/></span><h2>{stage.title}</h2><p>{stage.detail}</p><div className="ls-caption-proof">{['“Hi, tote ni berapa? 有黑色吗？”','Canvas tote · RM129. Stock and delivery: ask the team.','“RM129 for the canvas tote. Nak pakai sendiri or as a gift?”','Gift. Below RM150. Needed by Friday.','Confirm colour & delivery. Contact details only with permission.'][index]}</div></div>
         <SalesEvidence index={index}/>
       </article>)}</div>
       <nav className="ls-sales-nav" aria-label="Product story chapters">{stages.map((stage,index) => <button key={stage.label} data-story-step={index} aria-current={index === 0 ? 'step' : undefined} onClick={() => select(index)}><span>0{index+1}</span>{stage.label}<ArrowDown size={14}/></button>)}</nav>
@@ -85,7 +90,7 @@ function SalesStory() {
   </section>;
 }
 
-function DemoChat({businessIndex,onInteraction}: {businessIndex:number; onInteraction:() => void}) {
+export function DemoChat({businessIndex,onInteraction}: {businessIndex:number; onInteraction:() => void}) {
   const [messages,setMessages] = useState<{role:'user'|'bot'; text:string}[]>([]);
   const [input,setInput] = useState('');
   const [typing,setTyping] = useState(false);
@@ -125,7 +130,9 @@ export function StoryLanding({onStart,onLogin,signedIn,theme,onTheme}: {onStart:
   const [prompt,setPrompt] = useState(readDraft);
   const [menu,setMenu] = useState(false);
   const [businessIndex,setBusinessIndex] = useState(2);
-  const [interacted,setInteracted] = useState(false);
+  const [sceneReady,setSceneReady] = useState(false);
+  const onSceneReady = useCallback((ready:boolean) => setSceneReady(ready),[]);
+  const demo = useDemoModal();
   const [faq,setFaq] = useState<number | null>(null);
   const root = useRef<HTMLDivElement>(null);
   const business = businesses[businessIndex];
@@ -134,18 +141,23 @@ export function StoryLanding({onStart,onLogin,signedIn,theme,onTheme}: {onStart:
   function updatePrompt(value:string) {setPrompt(value); saveDraft(value);}
   function useExample() {updatePrompt(business.prompt); goTo('builder',true);}
   const begin = () => goTo('builder',true);
-  return <div className="lumo-story ls-product-led" ref={root}>
+  return <div className={`lumo-story ls-product-led ls-dimensional ${sceneReady ? 'scene-ready' : ''}`} ref={root}>
     <a className="ls-skip" href="#business-idea">Skip to builder</a><div className="ls-progress"/>
     <header className="ls-header"><div className="ls-header-inner"><Brand/><nav aria-label="Main navigation"><a href="#how-it-works">The Lumo difference</a><a href="#playground">Try Lumo</a><a href="#pricing">Pricing</a></nav><div className="ls-header-actions"><button className="ls-icon" onClick={onTheme} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>{theme === 'light' ? <Moon size={19}/> : <Sun size={19}/>}</button><button className="ls-login" onClick={onLogin}>{signedIn ? 'Workspace' : 'Log in'}</button><button className="ls-button ls-nav-cta" onClick={() => goTo('playground')}>Try a conversation<ArrowUpRight size={17}/></button><button className="ls-icon ls-menu" aria-label={menu ? 'Close menu' : 'Open menu'} aria-expanded={menu} aria-controls="ls-mobile-nav" onClick={() => setMenu(!menu)}>{menu ? <X size={22}/> : <Menu size={22}/>}</button></div></div>{menu && <nav id="ls-mobile-nav" className="ls-mobile-nav" aria-label="Mobile navigation">{[['The Lumo difference','#how-it-works'],['Try Lumo','#playground'],['Pricing','#pricing']].map(([label,href]) => <a key={href} href={href} onClick={() => setMenu(false)}>{label}<ArrowUpRight size={18}/></a>)}<button onClick={() => {setMenu(false); begin();}}>Build your agent<ArrowUpRight size={18}/></button></nav>}</header>
     <main>
+      <div className="ls-experience">
+      <LumoScene demoOpen={demo.open} onReady={onSceneReady}/>
       <section className="ls-hero" id="hero">
-        <div className="ls-hero-echo" aria-hidden="true"><span>Berapa?</span><span>可以吗？</span><span>Can ah?</span></div>
         <div className="ls-hero-title"><span className="ls-kicker"><span className="ls-dot"/>MADE FOR MALAYSIAN BUSINESSES</span><h1>Lumo. Your Malaysian<br/>AI <span>sales agent.</span></h1><p className="ls-hero-sub">Answer enquiries. Understand buyers.<br className="ls-mobile-break"/> Move the sale forward.</p></div>
-        <div className={`ls-hero-demo ${interacted ? 'has-interacted' : ''}`} id="playground"><DemoChat businessIndex={businessIndex} onInteraction={() => setInteracted(true)}/></div>
-        <div className="ls-hero-links"><span><LockKeyhole size={14}/>No account. No card. Preset replies.</span><button onClick={begin}>Build your own<ArrowUpRight size={15}/></button></div>
+        <div className="ls-hero-actions"><button id="try-lumo" className="ls-button" onClick={event => demo.launch(event.currentTarget)}>Try Lumo<ArrowUpRight size={19}/></button><button className="ls-text-link" onClick={begin}>Build your agent<ArrowRight size={19}/></button></div>
+        <div className="ls-hero-links"><span><LockKeyhole size={14}/>No account. No card. Preset replies.</span></div>
+        <a className="ls-opening-cue" href="#how-it-works"><span>ONE ENQUIRY. FIVE POSSIBILITIES.</span><ArrowDown size={19}/></a>
       </section>
       <section className="ls-manifesto ls-wrap" aria-label="The Lumo difference"><span className="ls-kicker">FROM THE FIRST QUESTION TO THE NEXT STEP</span><h2 data-motion="statement"><span>Not just replies.</span><br/><span>Sales conversations.</span></h2><a href="#how-it-works" className="ls-story-cue">Follow one enquiry<ArrowDown size={20}/></a></section>
       <SalesStory/>
+      </div>
+      <section className="ls-language-moment ls-wrap"><span className="ls-kicker">ONE BUYER. NOT THREE TRANSLATIONS.</span><h2 data-motion="statement"><span>“How much?”</span><span>“Berapa?”</span><span lang="zh">“多少钱？”</span></h2><p>English. BM. 中文. Mixed naturally.<br/>Same enquiry. Same business facts. Same next step.</p><a href="#playground" className="ls-text-link">Try the Malaysian mix<ArrowUpRight size={18}/></a></section>
+      <ProductShowcase/>
       <section className="ls-business-band" id="use-cases"><div className="ls-wrap"><div className="ls-section-top"><span>SELL PRODUCTS. SELL SERVICES.</span><span>APPOINTMENTS ARE JUST ONE NEXT STEP.</span></div><div className="ls-business-heading"><h2 data-motion="headline">Your business.<br/>Your way to sell.</h2><div role="group" aria-label="Business examples" className="ls-business-selector">{businesses.map((b,i) => <button aria-pressed={businessIndex === i} key={b.id} onClick={() => setBusinessIndex(i)}><b.icon size={20}/>{b.label}<ArrowUpRight size={18}/></button>)}</div></div>
         <div className="ls-business-feature"><div className="ls-business-media" data-motion="image">{businesses.map((b,i) => <div className="ls-business-layer" aria-hidden={businessIndex !== i} data-active={businessIndex === i} key={b.id}><BusinessImage index={i}/></div>)}<span><business.icon size={18}/>{business.name} / Sample business</span></div><div className="ls-business-copy" key={business.id}><span className="ls-kicker">{business.category}</span><h3>{business.headline}</h3><p>{business.description}</p><div className="ls-example-proof"><span className="ls-evidence-label">SAMPLE CUSTOMER</span><p>{business.questions[0]}</p><span className="ls-evidence-label">APPROVED STARTING POINT</span><p>{business.fact}</p><strong><ArrowRight size={16}/>{['Consultation or team quote','Qualified quote request','Purchase guidance or team handoff'][businessIndex]}</strong></div><div className="ls-example-actions"><button className="ls-text-link" onClick={() => goTo('playground')}>Try this conversation<ArrowUpRight size={18}/></button><button className="ls-text-link" onClick={useExample}>Use this example<ArrowUpRight size={18}/></button></div></div></div>
       </div></section>
@@ -154,5 +166,11 @@ export function StoryLanding({onStart,onLogin,signedIn,theme,onTheme}: {onStart:
       <section className="ls-faq ls-wrap" id="faq"><div><span className="ls-kicker">THE DETAILS, WHEN YOU NEED THEM</span><h2 data-motion="headline">Clear answers.</h2></div><div>{questions.map(([q,a],i) => <div className="ls-faq-item" key={q}><h3><button onClick={() => setFaq(faq === i ? null : i)} aria-expanded={faq === i} aria-controls={`ls-answer-${i}`}><span>{q}</span><Plus size={19} className={faq === i ? 'expanded' : ''}/></button></h3><p id={`ls-answer-${i}`} hidden={faq !== i}>{a}</p></div>)}</div></section>
       <section className="ls-close" data-motion="finale"><div className="ls-wrap"><span className="ls-kicker">THE NEXT CONVERSATION STARTS HERE</span><h2>Less “just checking”.<br/>More buying intent.</h2><button className="ls-button" onClick={begin}>Build your Lumo agent<ArrowUpRight size={20}/></button><a href="#playground">Or try a conversation<ArrowRight size={17}/></a></div><div className="ls-big-brand" data-motion="wordmark" aria-hidden="true">Lumo</div></section>
     </main><footer className="ls-footer ls-wrap"><Brand/><span>Built around how Malaysia chats.</span><nav aria-label="Footer navigation"><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="#hero" aria-label="Back to top" title="Back to top"><ArrowDown size={18} className="ls-up"/></a></nav><small>&copy; {new Date().getFullYear()} Lumo</small></footer>
+    <dialog id="playground" className="ls-demo-dialog" ref={demo.dialog} aria-labelledby="demo-title" onCancel={event => {event.preventDefault();demo.close();}} onClick={event => {if(event.target===event.currentTarget) demo.close();}}>
+      <div className="ls-demo-modal-head"><div><span className="ls-kicker">TRY BEFORE YOU BUILD</span><h2 id="demo-title">A conversation, your way.</h2></div><button autoFocus className="ls-icon" aria-label="Close demo" title="Close demo" onClick={() => demo.close()}><X size={22}/></button></div>
+      <div className="ls-demo-businesses" role="group" aria-label="Demo business examples">{businesses.map((item,index) => <button key={item.id} aria-pressed={businessIndex===index} onClick={() => setBusinessIndex(index)}><item.icon size={17}/>{item.label}</button>)}</div>
+      <DemoChat businessIndex={businessIndex} onInteraction={() => {}}/>
+      <button className="ls-text-link ls-demo-build" onClick={() => {demo.close();begin();}}>Build your agent<ArrowUpRight size={18}/></button>
+    </dialog>
   </div>;
 }
