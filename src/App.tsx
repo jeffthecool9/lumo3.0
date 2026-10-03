@@ -9,6 +9,7 @@ import './styles.css';
 import './premium.css';
 import './operations.css';
 import './readability.css';
+import './visual-system.css';
 export default function App(){
   const [,setAuthRevision]=useState(0);
   const [config,setConfig]=useState<PublicConfig|null>(null);const [user,setUser]=useState<User|null>(null);const [ready,setReady]=useState(false);const [gate,setGate]=useState<'login'|'trial'|null>(null);
