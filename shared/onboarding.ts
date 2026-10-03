@@ -1,4 +1,4 @@
-import type {WorkspaceState} from './schema';
+import type {WorkspaceState} from './schema.js';
 export const setupSteps=[
  {id:'knowledge',title:'Business details',action:'Add business details'},
  {id:'catalogue',title:'Products & prices',action:'Review products & prices'},
