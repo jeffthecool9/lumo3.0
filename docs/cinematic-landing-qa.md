@@ -26,7 +26,7 @@ Run `npm test`, `npm run build` and `npm run test:runtime` on a supported Node r
 
 ## Browser Checks
 
-Verified at 320, 375, 430, 768, 1280 and 1440px widths. Headings, primary controls and showcase tabs remain within the viewport; no horizontal overflow was measured. Desktop and mobile screenshots show nonblank 3D geometry. Pixel analysis found 47,855 blue-logo pixels in the desktop opening and 16,142 in the mobile opening. Right-hand canvas-region hashes differ between opening, language and handoff scenes, confirming changed rendered output.
+Verified at 320, 375, 430, 768, 1280 and 1440px widths, plus a compact 320x568 dark-mode opening. Headings, primary controls and showcase tabs remain within the viewport; no horizontal overflow was measured. Desktop and mobile screenshots show nonblank 3D geometry with substantial blue-logo pixel output. Right-hand canvas-region hashes differ between opening, language and handoff scenes, confirming changed rendered output.
 
 Manual checks cover preset reply, close/reopen preservation, Escape/focus restoration, direct `#playground`, chapter controls, forward/reverse scrolling, and resize between pinned and vertical layouts. GPU/context and reduced-motion failures are automated with controlled mocks; those tests are not a substitute for a representative physical-device matrix.
 

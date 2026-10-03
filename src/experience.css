@@ -15,7 +15,7 @@
 .ls-hero-actions .ls-text-link{font-size:14px}
 .ls-dimensional .ls-hero-links{font-size:11px;margin-top:13px}
 .ls-opening-cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:25px;font-size:10px;white-space:nowrap;font-weight:600}
-.ls-dimensional .ls-manifesto{position:relative;z-index:2;pointer-events:none;background:var(--ls-bg);padding-block:50px}
+.ls-dimensional .ls-manifesto{position:relative;z-index:2;pointer-events:none;background:var(--ls-bg);padding-top:18px;padding-bottom:50px}
 .ls-dimensional .ls-manifesto a{pointer-events:auto}
 .ls-dimensional .ls-sales-story{height:300svh;z-index:auto;background:#1c251c;color:#f1f5ed}
 .ls-dimensional .ls-sales-pin{z-index:2;pointer-events:none}
