@@ -1,8 +1,9 @@
 import React from 'react';
-import {ArrowLeft,BookOpen,CalendarDays,CreditCard,GitBranch,LayoutDashboard,Link2,LogOut,MessageSquare,PanelLeftClose,Settings,Users,X} from 'lucide-react';
+import {ArrowLeft,BookOpen,CalendarDays,Clock,CreditCard,GitBranch,LayoutDashboard,Link2,LogOut,MessageSquare,PanelLeftClose,Settings,ShoppingBag,Users,X} from 'lucide-react';
 import {Brand} from './Brand';
 export const workspaceTabs=[
   {id:'overview',label:'Overview',icon:LayoutDashboard,group:'BUSINESS'},
+  {id:'catalogue',label:'Sales catalogue',icon:ShoppingBag,group:''},{id:'followups',label:'Follow-ups',icon:Clock,group:''},
   {id:'inbox',label:'Live chat',icon:MessageSquare,group:''},{id:'leads',label:'Leads',icon:Users,group:''},{id:'appointments',label:'Appointments',icon:CalendarDays,group:''},
   {id:'plan',label:'Flows',icon:GitBranch,group:'ASSISTANT'},{id:'knowledge',label:'Business knowledge',icon:BookOpen,group:''},{id:'chat',label:'Test chat',icon:MessageSquare,group:''},{id:'connections',label:'Connections',icon:Link2,group:''},
   {id:'settings',label:'Settings',icon:Settings,group:'MANAGE'},{id:'billing',label:'Usage & billing',icon:CreditCard,group:''},

@@ -16,6 +16,9 @@ describe('unconfigured API fails closed',()=>{
     const r=await request(app).post(`/api${url}`).send({mode:'trial',paid:true,trial:true});expect(r.status).toBe(401);
   });
   it('rejects anonymous access to business records and settings',async()=>{
+    expect((await request(app).get('/api/sales')).status).toBe(401);
+    expect((await request(app).post('/api/sales/offers').send({})).status).toBe(401);
+    expect((await request(app).post('/api/sales/followups').send({})).status).toBe(401);
     expect((await request(app).get('/api/operations')).status).toBe(401);
     expect((await request(app).put('/api/operations/settings').send({industry:'beauty',workspace_id:'other'})).status).toBe(401);
   });

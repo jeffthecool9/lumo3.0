@@ -14,14 +14,26 @@ beforeAll(async()=>{
   await query('insert into auth.users values($1),($2)',[userA,userB]);
   await db.exec(readFileSync(new URL('../supabase/migrations/002_firebase_auth.sql',import.meta.url),'utf8'));
   await db.exec(readFileSync(new URL('../supabase/migrations/003_business_operations.sql',import.meta.url),'utf8'));
+  await db.exec(readFileSync(new URL('../supabase/migrations/20261003060919_sales_catalogue_followups.sql',import.meta.url),'utf8'));
   a=(await query('select ensure_workspace($1) id',[userA]))[0].id;b=(await query('select ensure_workspace($1) id',[userB]))[0].id;
 });
 afterAll(async()=>{await db?.close();});
 beforeEach(async()=>{
-  await db.exec('reset role; delete from inbox_messages; delete from inbox_threads; delete from appointments; delete from crm_leads;');
+  await db.exec('reset role; delete from sales_followups; delete from sales_offers; delete from inbox_messages; delete from inbox_threads; delete from appointments; delete from crm_leads;');
   await db.exec("reset role; delete from usage_records; delete from trial_claims; update platform_controls set ai_enabled=true,daily_cost_micros=10000000; update billing set status='trialing',tier='trial',price_valid=true,trial_verified=true,trial_used=false,review_required=false,paid_verified=false,period_start=now(),period_end=now()+interval '7 days',checkout_key=null,checkout_session=null,subscription_id=null,sync_version=0;");
 });
 describe('business operations integrity',()=>{
+  it('invalidates approval when offer facts change and rejects negative prices',async()=>{
+    const [offer]=await query("insert into sales_offers(workspace_id,name,price_sen,approved_at) values($1,'Package',9900,now()) returning id",[a]);
+    await query('update sales_offers set price_sen=10900 where id=$1',[offer.id]);
+    expect((await query('select approved_at,price_sen from sales_offers where id=$1',[offer.id]))[0]).toMatchObject({approved_at:null,price_sen:10900});
+    await expect(query("insert into sales_offers(workspace_id,name,price_sen) values($1,'Invalid',-1)",[a])).rejects.toThrow(/check constraint/);
+  });
+  it('prevents cross-business follow-ups and blocks browser access to sales tables',async()=>{
+    const [lead]=await query("insert into crm_leads(workspace_id,name) values($1,'Other owner') returning id",[b]);
+    await expect(query("insert into sales_followups(workspace_id,lead_id,title,due_at) values($1,$2,'Call',now())",[a,lead.id])).rejects.toThrow(/foreign key/);
+    for(const role of ['anon','authenticated']){await db.exec(`set role ${role}`);for(const table of ['sales_offers','sales_followups'])await expect(query(`select * from ${table}`)).rejects.toThrow(/permission denied/);await db.exec('reset role');}
+  });
   async function lead(workspace=a){return (await query("insert into crm_leads(workspace_id,name) values($1,'Test lead') returning id",[workspace]))[0].id;}
   async function booking(workspace:string,leadId:string,start:string,end:string,resource='Chair A',status='confirmed'){
     return query('insert into appointments(workspace_id,lead_id,service,resource,starts_at,ends_at,status) values($1,$2,$3,$4,$5,$6,$7) returning id',[workspace,leadId,'Haircut',resource,start,end,status]);

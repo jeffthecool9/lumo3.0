@@ -9,6 +9,7 @@ import { AppError, accessAllowed } from './policy.js';
 import { checkout, syncBilling, paymentGateway, handleBillingEvent } from './billing.js';
 import { runAI } from './ai.js';
 import { operations } from './operations.js';
+import {sales,approvedCatalogue} from './sales.js';
 import { emptyKnowledge, knowledgeSchema, planSchema } from '../shared/schema.js';
 import { availableAuthMethods } from '../shared/auth-methods.js';
 
@@ -67,6 +68,7 @@ app.use('/api',async(req,res,next)=>{
 });
 
 app.use('/api/operations',operations);
+app.use('/api/sales',sales);
 app.get('/api/workspace',async(_req,res,next)=>{
   try {
     const w=res.locals.workspace;
@@ -100,7 +102,7 @@ app.post('/api/plans/generate',async(req,res,next)=>{
     const w=res.locals.workspace;
     await paidAccess(w);
     const k=await checked(database().from('knowledge').select('content').eq('workspace_id',w).single());
-    const content=await runAI(w,'plan',{prompt,knowledge:k.content});
+    const content=await runAI(w,'plan',{prompt,knowledge:k.content,approvedCatalogue:await approvedCatalogue(w)});
     const plan=await rpc('create_plan',{p_workspace:w,p_content:content});
     res.json(plan);
   } catch(e){next(e);}
@@ -142,7 +144,7 @@ app.post('/api/chat',async(req,res,next)=>{
     const previous=conversation?.messages??[];
     if(previous.length>=40) throw new AppError(409,'This test reached 20 replies. Start a new conversation.');
     const k=await checked(database().from('knowledge').select('content').eq('workspace_id',w).single());
-    const text=await runAI(w,'reply',{plan:plan.content,knowledge:k.content,messages:[...previous.slice(-12),{role:'user',text:message}]});
+    const text=await runAI(w,'reply',{plan:plan.content,knowledge:k.content,approvedCatalogue:await approvedCatalogue(w),messages:[...previous.slice(-12),{role:'user',text:message}]});
     const messages=[...previous,{role:'user',text:message},{role:'model',text}];
     const data={workspace_id:w,plan_id:planId,messages,updated_at:new Date().toISOString()};
     const saved=await checked(conversation
