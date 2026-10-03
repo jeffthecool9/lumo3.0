@@ -1,6 +1,6 @@
 import {defineConfig} from 'vitest/config';
 export default defineConfig({test:{
-  include:['tests/**/*.test.ts'],testTimeout:20000,hookTimeout:30000,pool:'forks',maxWorkers:1,
+  include:['tests/**/*.test.{ts,tsx}'],testTimeout:20000,hookTimeout:30000,pool:'forks',maxWorkers:1,
   // Local integration credentials must never affect isolated tests.
   env:{
     FIREBASE_API_KEY:'',FIREBASE_AUTH_DOMAIN:'',FIREBASE_PROJECT_ID:'',FIREBASE_APP_ID:'',
